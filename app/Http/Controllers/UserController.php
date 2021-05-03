@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Endereco;
+use App\Models\Telefone;
 use App\Rules\ChecaCpf;
 use App\Rules\ChecaMascaraCpf;
 use App\Rules\ChecaNomeCompleto;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\User;
+use \App\Models\User as Usuario;
 use Throwable;
 
 class UserController extends Controller
@@ -19,7 +23,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = Usuario::with(['enderecos', 'telefones'])->get();
 
         return $users;
     }
@@ -36,19 +40,27 @@ class UserController extends Controller
         #validação dos campos
         $this->validaUsuario($request, true);
 
-        $user = new User();
+        $user = new Usuario();
 
-        $user->email    = $request->email;
-        $user->name     = $request->name;
-        $user->cpf      = $request->cpf;
-        $user->data_nascimento = $request->data_nascimento;
-        $user->certificado = $request->certificado;
-        $user->certificado_validade = $request->certificado_validade;
-        $user->certificado_dn = $request->certificado_dn;
+        $user->email                 = $request->email;
+        $user->name                  = $request->name;
+        $user->cpf                   = $request->cpf;
+        $user->data_nascimento       = $request->data_nascimento;
+        $user->certificado           = $request->certificado;
+        $user->certificado_validade  = $request->certificado_validade;
+        $user->certificado_dn        = $request->certificado_dn;
         $user->certificado_issuer_dn = $request->certificado_issuer_dn;
-        $user->password = Hash::make($request->password);
+        $user->password              = Hash::make($request->password);
 
         $user->save();
+
+        if ($request->enderecos) {
+            $user->enderecos()->createMany($request->enderecos);
+        }
+
+        if ($request->telefones) {
+            $user->telefones()->createMany($request->telefones);
+        }
 
         return $user;
     }
@@ -57,20 +69,19 @@ class UserController extends Controller
      * Busca usuário por id
      *
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
         #valida se o id existe no banco
-        $user = User::find($id);
+        $user = Usuario::with(['enderecos', 'telefones'])->where('id', $id)->get();
 
-        if(!$user) {
+        if (!$user) {
             return response()->json(['error' => 'Usuário não encontrado'], 404);
         }
 
         return $user;
     }
-
 
     /**
      * Validação de nome completo, email e cpf, com regras custom
@@ -102,14 +113,14 @@ class UserController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return Usuario|Usuario[]|\Illuminate\Database\Eloquent\Collection|Model|\Illuminate\Http\JsonResponse
      */
     public function update($id, Request $request)
     {
 
         $this->validaUsuario($request, false, $id);
 
-        $user = User::find($id);
+        $user = Usuario::find($id);
 
         if (!$user) {
             return response()->json(['error' => 'Usuário não encontrado'], 404);
@@ -129,8 +140,22 @@ class UserController extends Controller
 
         $user->update();
 
-        $result = $user->toArray();
-        unset($result["password"]);
+        if($request->enderecos) {
+            foreach($request->enderecos as $end) {
+                $endereco = Endereco::find($end["id"]);
+                $endereco->update($end);
+            }
+        }
+
+        if($request->telefones) {
+            foreach($request->telefones as $tel) {
+                $telefone = Telefone::find($tel["id"]);
+                $telefone->update($tel);
+            }
+        }
+
+        $user = Usuario::with(['enderecos', 'telefones'])->where('id', $id)->get()->toArray();
+        unset($user["password"]);
 
         return $user;
     }
@@ -159,5 +184,14 @@ class UserController extends Controller
         $user->delete();
 
         return $user;
+    }
+
+    public function enderecos()
+    {
+        $user = Usuario::with(['enderecos', 'telefones'])->get();
+
+
+        return $user;
+        //return \App\Models\User::with(['enderecos', 'telefones'])->first();
     }
 }
