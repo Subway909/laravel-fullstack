@@ -44,9 +44,18 @@
       <v-spacer></v-spacer>
 
       <v-app-bar-nav-icon @click="logout">
-        <v-icon dark>
-          mdi-logout
-        </v-icon>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon
+              dark
+              v-bind="attrs"
+              v-on="on">
+              mdi-logout
+            </v-icon>
+          </template>
+          <span>Logout</span>
+        </v-tooltip>
+
       </v-app-bar-nav-icon>
     </v-app-bar>
 
@@ -67,12 +76,12 @@
       <span class="white--text">&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
 
-    <Loading ref="loading" />
+    <Loading ref="loading"/>
   </v-app>
 </template>
 
 <script>
-import { events } from './plugins/events'
+import {events} from './plugins/events'
 import Loading from "@/components/Loading";
 
 export default {
@@ -105,8 +114,8 @@ export default {
     logout() {
       this.$confirm("Deseja efetuar o logout?", "", "",
         {
-                  confirmButtonText: 'Sim',
-                  cancelButtonText: 'Não'
+          confirmButtonText: 'Sim',
+          cancelButtonText: 'Não'
         }).then(() => {
         this.$router.replace("/logout")
       });
@@ -124,7 +133,7 @@ export default {
 </style>
 
 <style>
-  .swal2-content, .swal2-actions {
-    font-family: Arial, Helvetica, sans-serif;
-  }
+.swal2-content, .swal2-actions {
+  font-family: Arial, Helvetica, sans-serif;
+}
 </style>
