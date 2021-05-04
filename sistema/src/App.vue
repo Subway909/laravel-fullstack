@@ -43,11 +43,8 @@
 
       <v-spacer></v-spacer>
 
-      <v-app-bar-nav-icon >
-        <v-icon
-          dark
-          @click="logout"
-        >
+      <v-app-bar-nav-icon @click="logout">
+        <v-icon dark>
           mdi-logout
         </v-icon>
       </v-app-bar-nav-icon>
@@ -69,12 +66,17 @@
       v-if="!isLogin">
       <span class="white--text">&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
+
+    <Loading ref="loading" />
   </v-app>
 </template>
 
 <script>
+import { events } from './plugins/events'
+import Loading from "@/components/Loading";
 
 export default {
+  components: {Loading},
   props: {
     source: String,
   },
@@ -94,7 +96,10 @@ export default {
     }
   },
   mounted() {
-    console.log('loaded app')
+    const loading = this.$refs.loading
+
+    events.$on(['loadingStart', 'httpStart'], () => loading.start())
+    events.$on(['loadingDone', 'httpDone'], () => loading.done())
   },
   methods: {
     logout() {

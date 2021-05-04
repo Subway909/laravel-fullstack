@@ -1,24 +1,27 @@
 <template>
-    <v-container>
-      <v-row>
-        <v-col>
+  <v-container>
+    <v-layout>
+      <v-row align="center"
+             justify="center">
+        <v-col cols="6" sm="12" md="6">
           <v-card elevation="2" class="card-login">
             Acesso ao sistema
 
             <v-form
               ref="form"
               :lazy-validation="true"
+              v-model="valid"
               style="margin-top: 30px;">
 
               <v-text-field
                 v-model="usuario"
                 autocomplete="new-password"
                 name="userField"
-                :counter="100"
                 maxlength="100"
                 label="Usuário"
                 required
                 outlined
+                :rules="emailRules"
                 validate-on-blur>
               </v-text-field>
 
@@ -26,7 +29,6 @@
                 v-model="senha"
                 autocomplete="new-password"
                 name="passField"
-                :counter="100"
                 maxlength="100"
                 label="Senha"
                 :type="pass_visible ? 'text' : 'password'"
@@ -45,36 +47,32 @@
           </v-card>
         </v-col>
       </v-row>
+    </v-layout>
 
-      <Loading ref="loading"/>
-
-    </v-container>
+  </v-container>
 </template>
 
 <script>
 
 import Rules from '../plugins/validation'
-import Loading from "@/components/Loading";
 
 export default {
   name: 'Login',
-  components: {Loading},
   data: () => ({
     pass_visible: false,
     usuario: '',
-    senha: ''
+    senha: '',
+    valid: true,
+    emailRules: [
+      v => !!v || 'E-mail é obrigatório',
+      v => /.+@.+\..+/.test(v) || 'E-mail precisa ser válido',
+    ],
   }),
   computed: {
     rules: () => Rules
   },
   methods: {
     login: function () {
-      const loading = this.$refs.loading
-
-      loading.start()
-
-      console.log('login')
-
       let params = {
         params: {
           email: this.usuario,
@@ -82,32 +80,34 @@ export default {
         }
       }
 
-      this.$http.get('/login', params).then(res => {
+      if (this.$refs.form.validate()) {
 
-        const token = res.data.access_token
-        const id_usuario = res.data.user.id
-        const name = res.data.user.name
-        const email = res.data.user.email
-        const login = true
+        this.$http.get('/login', params).then(res => {
 
-        if (token && id_usuario) {
-          this.$session.start()
-          this.$session.set('id_usuario', id_usuario)
-          this.$session.set('name', name)
-          this.$session.set('token', token)
-          this.$session.set('email', email)
-          this.$session.set('login', login)
+          const token = res.data.access_token
+          const id_usuario = res.data.user.id
+          const name = res.data.user.name
+          const email = res.data.user.email
+          const login = true
 
-          this.$router.replace('/bemvindo')
-        }
+          if (token && id_usuario) {
+            this.$session.start()
+            this.$session.set('id_usuario', id_usuario)
+            this.$session.set('name', name)
+            this.$session.set('token', token)
+            this.$session.set('email', email)
+            this.$session.set('login', login)
 
-      }).catch(err => {
-        loading.done()
-        console.log(err)
-        this.$session.destroy()
+            this.$router.replace('/bemvindo')
+          }
 
-        this.$alert("Não foi possível fazer login. Verifique seu usuário e senha e tente novamente.")
-      })
+        }).catch(err => {
+          console.log(err)
+          this.$session.destroy()
+
+          this.$alert("Não foi possível fazer login. Verifique seu usuário e senha e tente novamente.")
+        })
+      }
     }
   },
   mounted() {
@@ -120,6 +120,6 @@ export default {
 <style scoped>
 .card-login {
   padding: 30px;
-  margin-top: 100px;
+  margin-top: 25vh;
 }
 </style>
