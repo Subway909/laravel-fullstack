@@ -164,7 +164,7 @@ class UserController extends Controller
      * Delete de usuário
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {
@@ -184,14 +184,5 @@ class UserController extends Controller
         $user->delete();
 
         return $user;
-    }
-
-    public function enderecos()
-    {
-        $user = Usuario::with(['enderecos', 'telefones'])->get();
-
-
-        return $user;
-        //return \App\Models\User::with(['enderecos', 'telefones'])->first();
     }
 }
