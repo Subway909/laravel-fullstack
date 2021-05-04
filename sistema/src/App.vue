@@ -2,6 +2,7 @@
   <v-app id="inspire">
     <v-navigation-drawer
       v-model="drawer"
+      v-if="!isLogin"
       app>
       <v-list dense>
         <v-list-item>
@@ -15,7 +16,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item v-if="login">
+        <v-list-item>
           <v-list-item-action>
             <v-icon>mdi-account-box</v-icon>
           </v-list-item-action>
@@ -32,12 +33,27 @@
     <v-app-bar
       app
       color="green"
-      dark>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title></v-toolbar-title>
+      dark
+      v-if="!isLogin">
+      <v-app-bar-nav-icon
+        @click.stop="drawer = !drawer"
+        v-if="!isLogin"
+      ></v-app-bar-nav-icon>
+      <v-toolbar-title>Sistema</v-toolbar-title>
+
+      <v-spacer></v-spacer>
+
+      <v-app-bar-nav-icon >
+        <v-icon
+          dark
+          @click="logout"
+        >
+          mdi-logout
+        </v-icon>
+      </v-app-bar-nav-icon>
     </v-app-bar>
 
-    <v-main>
+    <v-main :class="isLogin ? 'bg' : ''">
       <v-container
         fluid>
         <v-row>
@@ -49,13 +65,15 @@
     </v-main>
     <v-footer
       color="green"
-      app>
+      app
+      v-if="!isLogin">
       <span class="white--text">&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
   </v-app>
 </template>
 
 <script>
+
 export default {
   props: {
     source: String,
@@ -65,12 +83,43 @@ export default {
     drawer: false,
   }),
   computed: {
-    login: function() {
+    login: function () {
       return (this.$session.get('login'))
+    },
+    currentRouteName() {
+      return this.$route.name;
+    },
+    isLogin() {
+      return this.currentRouteName === 'login'
     }
   },
   mounted() {
-    console.log(this.$session.get('login'))
+    console.log('loaded app')
+  },
+  methods: {
+    logout() {
+      this.$confirm("Deseja efetuar o logout?", "", "",
+        {
+                  confirmButtonText: 'Sim',
+                  cancelButtonText: 'Não'
+        }).then(() => {
+        this.$router.replace("/logout")
+      });
+    }
   }
 }
 </script>
+
+
+<style scoped>
+.bg {
+  background-image: url("assets/bg1.jpg");
+  background-size: cover;
+}
+</style>
+
+<style>
+  .swal2-content, .swal2-actions {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>

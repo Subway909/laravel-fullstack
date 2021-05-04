@@ -82,8 +82,9 @@ http.interceptors.response.use(function (response) {
   const status = get(error, 'response.status', 500)
 
   if (session.exists() && includes([401, 403], status)) {
-    router.replace({ name: 'logout' })
-    return new Promise(() => false)
+    router.replace('/', () => {})
+    session.destroy()
+    return Promise.reject(error)
   } else {
     return Promise.reject(error)
   }

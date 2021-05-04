@@ -22,12 +22,7 @@
       ]
     }),
     mounted() {
-      console.log('hello')
-
-      setInterval(() => { this.cors() }, 3000)
-
-      console.log(this.$session.get('name'))
-
+      console.log('loaded usuarios')
     },
     methods: {
       cors() {

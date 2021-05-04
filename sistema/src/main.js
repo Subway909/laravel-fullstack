@@ -7,12 +7,14 @@ import VueTheMask from 'vue-the-mask'
 import moment from 'moment'
 import './plugins/session'
 import './plugins/http'
+import VueSimpleAlert from "vue-simple-alert";
 
 Vue.config.productionTip = false
 
 moment.locale('pt-BR')
 
 Vue.use(VueTheMask)
+Vue.use(VueSimpleAlert);
 
 new Vue({
   router,
