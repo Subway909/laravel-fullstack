@@ -26,6 +26,13 @@ Route::get('/', function () {
     ];
 });
 
+Route::get('teste', function () {
+    return [
+        'teste' => 'ok',
+        'data' => Carbon::now()->toDateTimeString()
+    ];
+});
+
 Route::get('login', 'AuthController@login');
 
 Route::group(['middleware' => 'auth'], function() {
