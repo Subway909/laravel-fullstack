@@ -6,6 +6,19 @@
       0 => 'Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider',
     ),
   ),
+  'canducci/zipcode' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Canducci\\ZipCode\\Providers\\ZipCodeServiceProvider',
+      1 => 'Canducci\\ZipCode\\Providers\\ZipCodeAddressServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'ZipCode' => 'Canducci\\ZipCode\\Facades\\ZipCode',
+      'Address' => 'Canducci\\ZipCode\\Facades\\ZipCodeAddress',
+    ),
+  ),
   'facade/ignition' => 
   array (
     'providers' => 

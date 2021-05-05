@@ -42,4 +42,5 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('store', 'UserController@store');
     Route::post('update/{id}', 'UserController@update');
     Route::delete('delete/{id}', 'UserController@destroy');
+    Route::get('cep', 'CepController@getCep');
 });
