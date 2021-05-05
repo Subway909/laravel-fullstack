@@ -32,7 +32,7 @@
 
     <v-app-bar
       app
-      color="green"
+      color="blue"
       dark
       v-if="!isLogin">
       <v-app-bar-nav-icon
@@ -70,7 +70,7 @@
       </v-container>
     </v-main>
     <v-footer
-      color="green"
+      color="blue"
       app
       v-if="!isLogin">
       <span class="white--text">&copy; {{ new Date().getFullYear() }}</span>

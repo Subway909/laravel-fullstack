@@ -55,10 +55,20 @@ class UserController extends Controller
         $user->save();
 
         if ($request->enderecos) {
+            if (!is_array($request->enderecos)) {
+                $endereco[0] = json_decode($request->enderecos, true);
+                $request->enderecos = $endereco;
+            }
+
             $user->enderecos()->createMany($request->enderecos);
         }
 
         if ($request->telefones) {
+            if (!is_array($request->telefones)) {
+                $telefone[0] = json_decode($request->telefones, true);
+                $request->telefones = $telefone;
+            }
+
             $user->telefones()->createMany($request->telefones);
         }
 

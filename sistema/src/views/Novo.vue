@@ -5,56 +5,178 @@
       v-model="valid"
       :lazy-validation="true">
 
-      <v-text-field
-        v-model="model.nome"
-        :counter="100"
-        maxlength="100"
-        :rules="nameRules"
-        label="Name"
-        required
-        outlined
-        validate-on-blur>
-      </v-text-field>
+      <h3>Dados cadastrais</h3>
+      <v-row>
+        <!--nome, email, senha-->
+        <v-col>
+          <v-text-field
+            v-model="model.name"
+            :counter="100"
+            maxlength="100"
+            :rules="nameRules"
+            label="Nome"
+            required
+            outlined
+            validate-on-blur>
+          </v-text-field>
 
-      <v-text-field
-        v-model="model.email"
-        :rules="emailRules"
-        label="E-mail"
-        required
-        outlined=""
-        validate-on-blur>
-      </v-text-field>
+          <v-text-field
+            v-model="model.email"
+            :rules="emailRules"
+            :counter="100"
+            name="userField"
+            autocomplete="new-password"
+            label="E-mail"
+            required
+            outlined
+            validate-on-blur>
+          </v-text-field>
 
-      <v-text-field
-        v-model="model.telefone"
-        :rules="telefoneRules"
-        label="Telefone"
-        v-mask="['(##) #####-####', '(##) ####-####']"
-        required
-        outlined
-        validate-on-blur>
-      </v-text-field>
+          <v-menu
+            v-model="picker"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="model.data_nascimento"
+                label="Data de nascimento"
+                prepend-icon="mdi-calendar"
+                readonly
+                required
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="model.data_nascimento"
+              @input="picker = false"
+            ></v-date-picker>
+          </v-menu>
+        </v-col>
 
-      <v-textarea
-        label="Mensagem"
-        v-model="model.mensagem"
-        :rules="mensagemRules"
-        maxlenght="1000"
-        :counter="1000"
-        required
-        outlined
-        validate-on-blur
-      >
-      </v-textarea>
+        <!--cpf, data nascimento-->
+        <v-col>
+          <v-text-field
+            v-model="model.cpf"
+            label="CPF"
+            v-mask="'###.###.###-##'"
+            required
+            outlined
+            validate-on-blur>
+          </v-text-field>
+
+          <v-text-field
+            v-model="model.password"
+            label="Senha"
+            name="passField"
+            autocomplete="new-password"
+            :type="pass_visible ? 'text' : 'password'"
+            required
+            outlined
+            validate-on-blur>
+            <v-icon slot="append" @click="pass_visible = !pass_visible"
+                    :color="pass_visible ? 'primary' : undefined">
+              {{ pass_visible ? 'mdi-eye-off-outline' : 'mdi-eye-outline' }}
+            </v-icon>
+          </v-text-field>
+        </v-col>
+      </v-row>
+
+      <h3>Telefones</h3>
+      <v-row>
+        <v-col>
+          <v-text-field
+            v-model="model.telefones.telefone_fixo"
+            :rules="telefoneRules"
+            label="Telefone fixo"
+            v-mask="'(##) ####-####'"
+            required
+            outlined
+            validate-on-blur>
+          </v-text-field>
+        </v-col>
+
+        <v-col>
+          <v-text-field
+            v-model="model.telefones.telefone_celular"
+            :rules="telefoneRules"
+            label="Telefone celular"
+            v-mask="'(##) #####-####'"
+            required
+            outlined
+            validate-on-blur>
+          </v-text-field>
+        </v-col>
+      </v-row>
+
+      <h3>Endereço</h3>
+      <v-row>
+        <v-col>
+          <v-text-field
+            v-model="model.enderecos.cep"
+            label="CEP"
+            v-mask="'#####-###'"
+            required
+            outlined
+            @blur="buscaCep(model.enderecos.cep)"
+            validate-on-blur>
+          </v-text-field>
+
+          <v-text-field
+            v-model="model.enderecos.numero"
+            label="Número"
+            required
+            outlined
+            validate-on-blur>
+          </v-text-field>
+
+          <v-text-field
+            v-model="model.enderecos.cidade"
+            label="Cidade"
+            required
+            outlined
+            validate-on-blur>
+          </v-text-field>
+        </v-col>
+
+        <v-col>
+          <v-text-field
+            v-model="model.enderecos.logradouro"
+            label="Logradouro"
+            required
+            outlined
+            validate-on-blur>
+          </v-text-field>
+
+          <v-text-field
+            v-model="model.enderecos.bairro"
+            label="Bairro"
+            required
+            outlined
+            validate-on-blur>
+          </v-text-field>
+
+          <v-text-field
+            v-model="model.complemento"
+            label="Complemento"
+            required
+            outlined
+            validate-on-blur>
+          </v-text-field>
+        </v-col>
+      </v-row>
 
       <v-file-input
-        accept=".txt, .pdf, .doc, .docx, .odt"
-        label="Arquivo"
+        accept=".pem"
+        label="Certificado"
         required
         ref="inputUpload"
         v-model="model.arquivo"
-        :rules="arquivoRules"
-        validate-on-blur>
+        :rules="arquivoRules">
       </v-file-input>
 
       <v-btn
@@ -65,86 +187,134 @@
         Enviar
       </v-btn>
     </v-form>
-
-    <v-dialog v-model="dialog" persistent max-width="400">
-      <v-card>
-        <v-card-title class="headline">Atenção!</v-card-title>
-        <v-card-text>{{dialog_msg}}</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="dialog = false">OK</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <v-overlay :value="overlay">
-      <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay>
   </div>
 </template>
 
 <script>
+//import { validate } from 'gerador-validador-cpf'
 
-  export default {
-    data: () => ({
-      overlay: false,
-      dialog: false,
-      dialog_msg: '',
-      model: {
-        name: '',
-        email: '',
-        telefone: '',
-        mensagem: '',
-        arquivo: null
+export default {
+  data: () => ({
+    picker: false,
+    pass_visible: false,
+    dialog_msg: '',
+    model: {
+      name: '',
+      email: '',
+      password: '',
+      data_nascimento: '',
+      cpf: '',
+      arquivo: null,
+      telefones: {
+        telefone_fixo: '',
+        telefone_celular: ''
       },
-      valid: true,
-      nameRules: [
-        v => !!v || 'Nome é obrigatório',
-        v => (v && v.length >= 10) || 'O nome precisa ter pelo menos 10 caracteres',
-      ],
-      emailRules: [
-        v => !!v || 'E-mail é obrigatório',
-        v => /.+@.+\..+/.test(v) || 'E-mail precisa ser válido',
-      ],
-      telefoneRules: [
-        v => !!v || 'Telefone é obrigatório',
-        v => /^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})-?(\d{4}))$/.test(v) || 'Telefone inválido'
-      ],
-      mensagemRules: [
-        v => !!v || 'Mensagem é obrigatório',
-        v => !(v && v.length > 1000) || 'Máximo de 1000 caracteres'
-      ],
-      arquivoRules: [
-        v => !!v || 'Arquivo é obrigatório',
-        value => !value || value.size < 500000 || 'Arquivo deve ser menor do que 500 kb'
-      ]
-    }),
-    methods: {
-      save() {
-        if (this.$refs.form.validate()) {
-
-          this.overlay = true
-
-          let dadosForm = new FormData()
-
-          dadosForm.append('nome', this.model.nome)
-          dadosForm.append('email', this.model.email)
-          dadosForm.append('telefone', this.model.telefone)
-          dadosForm.append('mensagem', this.model.mensagem)
-
-          dadosForm.append('arquivo', this.model.arquivo)
-
-          this.$http.post('novoContato', dadosForm).then((r) => {
-            if (r.data.ok) {
-
-              this.dialog = true
-              this.dialog_msg = 'Cadastro efetuado com sucesso!'
-            }
-
-            this.overlay = false
-          })
-        }
+      enderecos: {
+        logradouro: '',
+        bairro: '',
+        numero: '',
+        cep: '',
+        cidade: '',
+        complemento: ''
       }
     },
+    valid: true,
+    nameRules: [
+      v => !!v || 'Nome é obrigatório',
+      v => (v && v.length >= 10) || 'O nome precisa ter pelo menos 10 caracteres',
+    ],
+    emailRules: [
+      v => !!v || 'E-mail é obrigatório',
+      v => /.+@.+\..+/.test(v) || 'E-mail precisa ser válido',
+    ],
+    telefoneRules: [
+      v => !!v || 'Telefone é obrigatório',
+      v => /^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})-?(\d{4}))$/.test(v) || 'Telefone inválido'
+    ],
+    mensagemRules: [
+      v => !!v || 'Mensagem é obrigatório',
+      v => !(v && v.length > 1000) || 'Máximo de 1000 caracteres'
+    ],
+    arquivoRules: [
+      v => !!v || 'Arquivo é obrigatório',
+      value => !value || value.size < 500000 || 'Arquivo deve ser menor do que 500 kb'
+    ]
+  }),
+  methods: {
+    buscaCep(cep) {
+      console.log(cep)
+
+      if (cep.length === 9) {
+        this.$http.get('cep', {params: {cep: cep}}).then((r) => {
+          console.log(r)
+
+          if (r.status === 200) {
+            if (r.data.bairro)
+              this.model.enderecos.bairro = r.data.bairro
+
+            if (r.data.logradouro)
+              this.model.enderecos.logradouro = r.data.logradouro
+
+            if (r.data.localidade)
+              this.model.enderecos.cidade = r.data.localidade
+
+            if (r.data.bairro)
+              this.model.enderecos.bairro = r.data.bairro
+          }
+        }).catch(err => {
+          console.error(err)
+        })
+      }
+    },
+    save() {
+      if (this.$refs.form.validate()) {
+
+        let dadosForm = new FormData()
+
+        dadosForm.append('name', this.model.name)
+        dadosForm.append('email', this.model.email)
+        dadosForm.append('cpf', this.model.cpf)
+        dadosForm.append('password', this.model.password)
+        dadosForm.append('data_nascimento', this.model.data_nascimento)
+
+        dadosForm.append('enderecos', JSON.stringify(this.model.enderecos))
+        dadosForm.append('telefones', JSON.stringify(this.model.telefones))
+
+        dadosForm.append('arquivo', this.model.arquivo)
+
+        this.$http.post('store', dadosForm).then((r) => {
+          console.log(r)
+
+          if (r.status === 201) {
+            this.$alert("Usuário cadastrado com sucesso.")
+            this.$router.push('/usuarios')
+          }
+        }).catch(err => {
+          this.$alert('Ocorreu um erro: ' + err)
+          console.error(err)
+        })
+      }
+    }
+  },
+  mounted() {
+
+    let debug = true
+
+    if (debug) {
+      this.model.name = 'henzo teste'
+      this.model.email = 'henzotestse@teste.com'
+      this.model.cpf = '822.637.560-60'
+      this.model.password = '123'
+      this.model.data_nascimento = '2000-01-10'
+
+      this.model.telefones.telefone_fixo = '(17) 3333-3333'
+      this.model.telefones.telefone_celular = '(17) 99999-9999'
+
+      this.model.enderecos.cep = '15085-895'
+      this.model.enderecos.numero = '123'
+
+      this.buscaCep(this.model.enderecos.cep)
+    }
   }
+}
 </script>

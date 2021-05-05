@@ -35,10 +35,14 @@
                 required
                 outlined
                 validate-on-blur>
+                <v-icon slot="append" @click="pass_visible = !pass_visible"
+                        :color="pass_visible ? 'primary' : undefined"> {{ pass_visible ? 'mdi-eye-off-outline' : 'mdi-eye-outline' }}
+                </v-icon>
               </v-text-field>
 
               <v-btn
-                color="success"
+                color="blue"
+                dark
                 class="mr-4"
                 @click="login()">
                 Entrar

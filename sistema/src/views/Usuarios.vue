@@ -108,14 +108,11 @@ export default {
     }
   },
   mounted() {
-    console.log('loaded usuarios')
-    console.log(this.usuarios)
     this.listar()
   },
   methods: {
     listar() {
       this.$http.get('/index').then((r) => {
-        console.log(r)
         this.usuarios = r.data
         this.buscou = true
       }).catch(err => {
@@ -136,7 +133,6 @@ export default {
       if (!this.selectedUserEndereco)
         this.selectedUserEndereco = {}
 
-      console.log(this.selectedUserEndereco)
     }
   }
 }
