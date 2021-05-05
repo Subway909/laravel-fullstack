@@ -26,6 +26,15 @@
           <v-flex><h2>Listagem de usuários</h2></v-flex>
 
           <v-card mt-5 style="padding: 10px;" color="#607d8b" dark>
+            <v-app-bar
+              flat
+              clipped-right
+              color="rgba(0, 0, 0, 0)"
+            >
+              <v-app-bar-nav-icon color="white" style="position: absolute; right: 25px;" @click="exibirDetalhes = !exibirDetalhes">
+                <v-icon>mdi-close</v-icon>
+              </v-app-bar-nav-icon>
+            </v-app-bar>
             <v-row wrap>
 
               <v-col cols="6">
@@ -38,8 +47,8 @@
               </v-col>
               <v-col cols="6">
                 <h4>Telefone</h4>
-                <b>Telefone Fixo:</b> {{ selectedUserTelefone.telefone_fixo || '' }} <br>
-                <b>Telefone Celular:</b> {{ selectedUserTelefone.telefone_celular || '' }} <br>
+                <b>Telefone Fixo:</b> {{ selectedUserTelefone.telefone_fixo}} <br>
+                <b>Telefone Celular:</b> {{ selectedUserTelefone.telefone_celular }} <br>
               </v-col>
               <v-col cols="6">
                 <h4>Endereço</h4>
@@ -53,10 +62,10 @@
               </v-col>
               <v-col cols="6">
                 <h4>Dados do certificado</h4>
-                <b>Nome:</b> {{ selectedUser.name }} <br>
-                <b>CPF:</b> {{ selectedUser.cpf }} <br>
-                <b>E-mail:</b> {{ selectedUser.email }} <br>
-                <b>Data de nascimento:</b> {{ selectedUser.data_nascimento | moment }} <br>
+                <b>Nome:</b> <br>
+                <b>CPF:</b> <br>
+                <b>E-mail:</b> <br>
+                <b>Data de nascimento:</b> <br>
               </v-col>
             </v-row>
 
@@ -124,8 +133,8 @@ export default {
 
       this.selectedUser = this.usuarios.find((s) => s.id === id)
 
-      this.selectedUserTelefone = _.find(this.usuarios, ['id', id]).telefones[0]
-      this.selectedUserEndereco = _.find(this.usuarios, ['id', id]).enderecos[0]
+      this.selectedUserTelefone = _.find(this.usuarios, ['id', id]).telefones
+      this.selectedUserEndereco = _.find(this.usuarios, ['id', id]).enderecos
 
       if (!this.selectedUserTelefone)
         this.selectedUserTelefone = {}
