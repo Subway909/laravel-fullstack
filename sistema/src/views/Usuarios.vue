@@ -62,10 +62,15 @@
               </v-col>
               <v-col cols="6">
                 <h4>Dados do certificado</h4>
-                <b>Nome:</b> <br>
-                <b>CPF:</b> <br>
-                <b>E-mail:</b> <br>
-                <b>Data de nascimento:</b> <br>
+                <v-flex v-if="userLogado === selectedUser.id">
+                  <b>Arquivo: </b> {{ selectedUser.certificado }} <br>
+                  <b>DN: </b> {{ selectedUser.certificado_dn }} <br>
+                  <b>ISSUER DN:</b> {{ selectedUser.certificado_issuer_dn }} <br>
+                  <b>Válido:</b> {{ `De ${selectedUser.certificado_not_before} até ${selectedUser.certificado_not_after}` }} <br>
+                </v-flex>
+                <v-flex v-if="userLogado !== selectedUser.id">
+                  Esse certificado não pertence a você. Para ver os dados desse certificado, faça login com esse usuário.
+                </v-flex>
               </v-col>
             </v-row>
 
@@ -111,6 +116,11 @@ export default {
       {Text: '', value: 'btn'}
     ]
   }),
+  computed: {
+    userLogado: function() {
+      return this.$session.get('id')
+    }
+  },
   filters: {
     moment: function (date) {
       return moment(date).format('DD/MM/YYYY')

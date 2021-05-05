@@ -9,10 +9,13 @@ use App\Rules\ChecaMascaraCpf;
 use App\Rules\ChecaNomeCompleto;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\User;
 use \App\Models\User as Usuario;
-use Throwable;
+use Illuminate\Support\Facades\Storage;
+use phpseclib3\File\X509;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -37,6 +40,22 @@ class UserController extends Controller
     public function store(Request $request)
     {
 
+        if ($request->arquivo) {
+
+            $filename = $request->arquivo->getClientOriginalName();
+
+            Storage::disk('local')->put('/certificados/'.$filename, file_get_contents($request->arquivo));
+
+            $x509 = new X509();
+            $cert = $x509->loadX509(File::get($request->arquivo->getRealPath()));
+
+            $dn = $x509->getDN(X509::DN_STRING);
+            $issuer_dn = $x509->getIssuerDN(X509::DN_STRING);
+
+            $validityNotBefore = $cert["tbsCertificate"]["validity"]["notBefore"]["utcTime"];
+            $validityNotAfter = $cert["tbsCertificate"]["validity"]["notAfter"]["utcTime"];
+        }
+
         #validação dos campos
         $this->validaUsuario($request, true);
 
@@ -46,11 +65,17 @@ class UserController extends Controller
         $user->name                  = $request->name;
         $user->cpf                   = $request->cpf;
         $user->data_nascimento       = $request->data_nascimento;
-        $user->certificado           = $request->certificado;
-        $user->certificado_validade  = $request->certificado_validade;
-        $user->certificado_dn        = $request->certificado_dn;
-        $user->certificado_issuer_dn = $request->certificado_issuer_dn;
         $user->password              = Hash::make($request->password);
+
+        $carbon = new Carbon();
+
+        if (isset($cert)) {
+            $user->certificado = $filename;
+            $user->certificado_dn = $dn;
+            $user->certificado_issuer_dn = $issuer_dn;
+            $user->certificado_not_before = $carbon::parse($validityNotBefore)->toDateTimeString();
+            $user->certificado_not_after = $carbon::parse($validityNotAfter)->toDateTimeString();
+        }
 
         $user->save();
 

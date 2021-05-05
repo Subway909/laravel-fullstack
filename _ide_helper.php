@@ -15560,6 +15560,53 @@
      
 }
 
+    namespace Canducci\ZipCode\Facades { 
+            /**
+     * 
+     *
+     */ 
+        class ZipCode {
+                    /**
+         * 
+         *
+         * @param $value
+         * @param bool $renew
+         * @return \Canducci\ZipCode\ZipCodeInfo|\Canducci\ZipCode\ZipCodeInfo|null 
+         * @throws ZipCodeException
+         * @static 
+         */ 
+        public static function find($value, $renew = false)
+        {
+                        /** @var \Canducci\ZipCode\ZipCode $instance */
+                        return $instance->find($value, $renew);
+        }
+         
+    }
+            /**
+     * 
+     *
+     */ 
+        class ZipCodeAddress {
+                    /**
+         * 
+         *
+         * @param string $uf
+         * @param string $city
+         * @param string $address
+         * @return \Canducci\ZipCode\ZipCodeAddressInfo 
+         * @throws ZipCodeException
+         * @static 
+         */ 
+        public static function find($uf, $city, $address)
+        {
+                        /** @var \Canducci\ZipCode\ZipCodeAddress $instance */
+                        return $instance->find($uf, $city, $address);
+        }
+         
+    }
+     
+}
+
     namespace Facade\Ignition\Facades { 
             /**
      * Class Flare.
@@ -19108,6 +19155,8 @@ namespace  {
             class View extends \Illuminate\Support\Facades\View {}
             class JWTAuth extends \Tymon\JWTAuth\Facades\JWTAuth {}
             class JWTFactory extends \Tymon\JWTAuth\Facades\JWTFactory {}
+            class ZipCode extends \Canducci\ZipCode\Facades\ZipCode {}
+            class Address extends \Canducci\ZipCode\Facades\ZipCodeAddress {}
             class Flare extends \Facade\Ignition\Facades\Flare {}
      
 }

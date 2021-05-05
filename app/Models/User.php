@@ -18,18 +18,17 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string $cpf
  * @property string $data_nascimento
  * @property string|null $certificado
- * @property string|null $certificado_validade
+ * @property string|null $certificado_not_before
+ * @property string|null $certificado_not_after
  * @property string|null $certificado_dn
  * @property string|null $certificado_issuer_dn
  * @property int $qtd_acessos
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Endereco[] $enderecos
- * @property-read int|null $enderecos_count
+ * @property-read \App\Models\Endereco|null $enderecos
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Telefone[] $telefones
- * @property-read int|null $telefones_count
+ * @property-read \App\Models\Telefone|null $telefones
  * @method static \Database\Factories\UserFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
@@ -37,7 +36,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCertificado($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCertificadoDn($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCertificadoIssuerDn($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereCertificadoValidade($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCertificadoNotAfter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCertificadoNotBefore($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCpf($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereDataNascimento($value)
@@ -61,7 +61,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'name', 'email', 'password', 'cpf', 'qtd_acessos', 'data_nascimento',
-        'certificado', 'certificado_validade', 'certificado_dn', 'certificado_issuer_dn'
+        'certificado', 'certificado_not_before', 'certificado_not_after', 'certificado_dn', 'certificado_issuer_dn'
     ];
 
     /**

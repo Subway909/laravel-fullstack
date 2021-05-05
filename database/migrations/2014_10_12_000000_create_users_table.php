@@ -22,7 +22,8 @@ class CreateUsersTable extends Migration
             $table->string('cpf')->unique();
             $table->date('data_nascimento');
             $table->string('certificado')->nullable();
-            $table->string('certificado_validade')->nullable();
+            $table->timestamp('certificado_not_before')->nullable();
+            $table->timestamp('certificado_not_after')->nullable();
             $table->string('certificado_dn')->nullable();
             $table->string('certificado_issuer_dn')->nullable();
             $table->integer('qtd_acessos')->default(0);
