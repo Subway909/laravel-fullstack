@@ -193,10 +193,18 @@ export default {
     },
     row_classes(item) {
       if (item.id === this.userLogado) {
-        return "green dark";
+        return "bg-user";
       }
     }
   }
 }
 
 </script>
+
+<style>
+  .bg-user {
+    background: #f27474 !important;
+    color: white;
+    font-weight: bold;
+  }
+</style>

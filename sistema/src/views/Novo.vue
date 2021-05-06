@@ -10,7 +10,7 @@
         <h2>{{ tipo_cadastro }} de Usuário</h2>
         <v-spacer></v-spacer>
 
-        <v-btn color="green" dark @click="novo">
+        <v-btn color="orange" dark @click="novo">
           <v-icon>mdi-plus</v-icon>
           Novo cadastro
         </v-btn>
@@ -333,23 +333,55 @@ export default {
     },
     preencherDados(dados) {
       if (dados) {
-        this.model.id = dados.id
-        this.model.name = dados.name
-        this.model.cpf = dados.cpf
-        this.model.data_nascimento = dados.data_nascimento
-        this.model.email = dados.email
 
-        this.model.enderecos.logradouro = dados.enderecos.logradouro
-        this.model.enderecos.bairro = dados.enderecos.bairro
-        this.model.enderecos.cep = dados.enderecos.cep
-        this.model.enderecos.cidade = dados.enderecos.cidade
-        this.model.enderecos.complemento = dados.enderecos.complemento
-        this.model.enderecos.numero = dados.enderecos.numero
-        this.model.enderecos.id = dados.enderecos.id
+        if (dados.id)
+          this.model.id = dados.id
 
-        this.model.telefones.telefone_celular = dados.telefones.telefone_celular
-        this.model.telefones.telefone_fixo = dados.telefones.telefone_fixo
-        this.model.telefones.id = dados.telefones.id
+        if (dados.name)
+          this.model.name = dados.name
+
+        if (dados.cpf)
+          this.model.cpf = dados.cpf
+
+        if (dados.data_nascimento)
+          this.model.data_nascimento = dados.data_nascimento
+
+        if (dados.email)
+          this.model.email = dados.email
+
+        if (dados.enderecos) {
+          if (dados.enderecos.logradouro)
+            this.model.enderecos.logradouro = dados.enderecos.logradouro
+
+          if (dados.enderecos.bairro)
+            this.model.enderecos.bairro = dados.enderecos.bairro
+
+          if (dados.enderecos.cep)
+            this.model.enderecos.cep = dados.enderecos.cep
+
+          if (dados.enderecos.cidade)
+            this.model.enderecos.cidade = dados.enderecos.cidade
+
+          if (dados.enderecos.complemento)
+            this.model.enderecos.complemento = dados.enderecos.complemento
+
+          if (dados.enderecos.numero)
+            this.model.enderecos.numero = dados.enderecos.numero
+
+          if (dados.enderecos.id)
+            this.model.enderecos.id = dados.enderecos.id
+        }
+
+        if (dados.telefones) {
+          if (dados.telefones.telefone_celular)
+            this.model.telefones.telefone_celular = dados.telefones.telefone_celular
+
+          if (dados.telefones.telefone_fixo)
+            this.model.telefones.telefone_fixo = dados.telefones.telefone_fixo
+
+          if (dados.telefones.id)
+            this.model.telefones.id = dados.telefones.id
+        }
       }
     },
     novo() {
@@ -363,8 +395,6 @@ export default {
       this.preencherDados(this.$route.params.dados)
       this.edicao = true
     }
-
-    console.log('edicao ' + this.edicao)
 
     let debug = false
 

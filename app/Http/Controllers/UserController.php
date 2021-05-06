@@ -77,20 +77,20 @@ class UserController extends Controller
 
             if ($request->enderecos) {
                 if (!is_array($request->enderecos)) {
-                    $endereco[0]        = json_decode($request->enderecos, true);
+                    $endereco        = json_decode($request->enderecos, true);
                     $request->enderecos = $endereco;
                 }
 
-                $user->enderecos()->createMany($request->enderecos);
+                $user->enderecos()->create($request->enderecos);
             }
 
             if ($request->telefones) {
                 if (!is_array($request->telefones)) {
-                    $telefone[0]        = json_decode($request->telefones, true);
+                    $telefone       = json_decode($request->telefones, true);
                     $request->telefones = $telefone;
                 }
 
-                $user->telefones()->createMany($request->telefones);
+                $user->telefones()->create($request->telefones);
             }
         });
 
@@ -196,8 +196,14 @@ class UserController extends Controller
                     $request->enderecos = $endereco;
                 }
 
-                $endereco = Endereco::find($request->enderecos["id"]);
-                $endereco->update($request->enderecos);
+                $enderecoModel = Endereco::find($request->enderecos["id"]);
+
+                if ($enderecoModel) {
+                    $enderecoModel->update($request->enderecos);
+                }
+                else {
+                    $user->enderecos()->create($request->enderecos);
+                }
             }
 
             if ($request->telefones) {
@@ -206,8 +212,14 @@ class UserController extends Controller
                     $request->telefones = $telefones;
                 }
 
-                $telefone = Telefone::find($request->telefones["id"]);
-                $telefone->update($request->telefones);
+                $telefoneModel = Telefone::find($request->telefones["id"]);
+
+                if ($telefoneModel) {
+                    $telefoneModel->update($request->telefones);
+                }
+                else {
+                    $user->telefones()->create($request->telefones);
+                }
             }
         });
 

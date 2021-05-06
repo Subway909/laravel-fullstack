@@ -86,7 +86,9 @@
       color="blue"
       app
       v-if="!isLogin">
-      <span class="white--text">&copy; {{ new Date().getFullYear() }}</span>
+      <span class="white--text">Henzo Gomes 🚀🚀</span>
+      <v-spacer></v-spacer>
+      <span class="white--text">{{ new Date().getFullYear() }}</span>
     </v-footer>
 
     <Loading ref="loading"/>
