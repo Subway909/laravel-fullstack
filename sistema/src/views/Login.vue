@@ -22,7 +22,8 @@
                 required
                 outlined
                 :rules="emailRules"
-                validate-on-blur>
+                validate-on-blur
+                @keyup.enter="login">
               </v-text-field>
 
               <v-text-field
@@ -34,7 +35,8 @@
                 :type="pass_visible ? 'text' : 'password'"
                 required
                 outlined
-                validate-on-blur>
+                validate-on-blur
+                @keyup.enter="login">
                 <v-icon slot="append" @click="pass_visible = !pass_visible"
                         :color="pass_visible ? 'primary' : undefined"> {{ pass_visible ? 'mdi-eye-off-outline' : 'mdi-eye-outline' }}
                 </v-icon>
@@ -44,7 +46,7 @@
                 color="blue"
                 dark
                 class="mr-4"
-                @click="login()">
+                @click="login">
                 Entrar
               </v-btn>
             </v-form>
@@ -58,8 +60,6 @@
 
 <script>
 
-import Rules from '../plugins/validation'
-
 export default {
   name: 'Login',
   data: () => ({
@@ -72,9 +72,6 @@ export default {
       v => /.+@.+\..+/.test(v) || 'E-mail precisa ser válido',
     ],
   }),
-  computed: {
-    rules: () => Rules
-  },
   methods: {
     login: function () {
       let params = {
