@@ -22,12 +22,12 @@ class DatabaseSeeder extends Seeder
         if (!$existeUserPrincipal) {
 
             $user->create([
-                'email' => 'henzo.gomes@gmail.com',
-                'name' => 'Henzo Gomes',
-                'cpf' => '123.456.789-09',
+                'email' => env("LOGIN_EMAIL"),
+                'name' => 'Usuário Teste',
+                'cpf' => '422.150.530-38',
                 'data_nascimento' => '2000-01-01',
                 'email_verified_at' => now(),
-                'password' => Hash::make('password')
+                'password' => Hash::make(env("LOGIN_PASS"))
             ]);
         }
         else {
