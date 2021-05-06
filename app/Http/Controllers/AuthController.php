@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class AuthController extends Controller
 {
     /**
-     * Efetua o login e retorn um token JWT
+     * Efetua o login e retorna um token JWT
      * @param Request $request
      * @return bool|\Illuminate\Http\JsonResponse
      */
