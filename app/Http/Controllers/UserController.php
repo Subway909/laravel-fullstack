@@ -7,15 +7,15 @@ use App\Models\Telefone;
 use App\Rules\ChecaCpf;
 use App\Rules\ChecaMascaraCpf;
 use App\Rules\ChecaNomeCompleto;
+use Carbon\Traits\Creator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\User;
 use \App\Models\User as Usuario;
-use Illuminate\Support\Facades\Storage;
-use phpseclib3\File\X509;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -35,25 +35,15 @@ class UserController extends Controller
      * Insere novo usuário
      *
      * @param \Illuminate\Http\Request $request
-     * @return User
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|User|\Illuminate\Http\Response
      */
     public function store(Request $request)
     {
 
-        if ($request->arquivo) {
+        $existeUser = self::existeUser($request);
 
-            $filename = $request->arquivo->getClientOriginalName();
-
-            Storage::disk('local')->put('/certificados/'.$filename, file_get_contents($request->arquivo));
-
-            $x509 = new X509();
-            $cert = $x509->loadX509(File::get($request->arquivo->getRealPath()));
-
-            $dn = $x509->getDN(X509::DN_STRING);
-            $issuer_dn = $x509->getIssuerDN(X509::DN_STRING);
-
-            $validityNotBefore = $cert["tbsCertificate"]["validity"]["notBefore"]["utcTime"];
-            $validityNotAfter = $cert["tbsCertificate"]["validity"]["notAfter"]["utcTime"];
+        if ($existeUser) {
+            return response(['error' => $existeUser]);
         }
 
         #validação dos campos
@@ -61,41 +51,48 @@ class UserController extends Controller
 
         $user = new Usuario();
 
-        $user->email                 = $request->email;
-        $user->name                  = $request->name;
-        $user->cpf                   = $request->cpf;
-        $user->data_nascimento       = $request->data_nascimento;
-        $user->password              = Hash::make($request->password);
+        $user->email           = $request->email;
+        $user->name            = $request->name;
+        $user->cpf             = $request->cpf;
+        $user->data_nascimento = $request->data_nascimento;
+        $user->password        = Hash::make($request->password);
 
-        $carbon = new Carbon();
+        if ($request->arquivo) {
+            $cert      = new SecController();
+            $dadosCert = $cert->readCertificate($request);
 
-        if (isset($cert)) {
-            $user->certificado = $filename;
-            $user->certificado_dn = $dn;
-            $user->certificado_issuer_dn = $issuer_dn;
-            $user->certificado_not_before = $carbon::parse($validityNotBefore)->toDateTimeString();
-            $user->certificado_not_after = $carbon::parse($validityNotAfter)->toDateTimeString();
+            if (isset($dadosCert)) {
+                $carbon = new Carbon();
+
+                $user->certificado            = $dadosCert['filename'];
+                $user->certificado_dn         = $dadosCert['dn'];
+                $user->certificado_issuer_dn  = $dadosCert['issuer_dn'];
+                $user->certificado_not_before = $carbon::parse($dadosCert['validityNotBefore'])->toDateTimeString();
+                $user->certificado_not_after  = $carbon::parse($dadosCert['validityNotAfter'])->toDateTimeString();
+            }
         }
 
-        $user->save();
+        DB::transaction(function () use ($user, $request) {
+            $user->save();
 
-        if ($request->enderecos) {
-            if (!is_array($request->enderecos)) {
-                $endereco[0] = json_decode($request->enderecos, true);
-                $request->enderecos = $endereco;
+            if ($request->enderecos) {
+                if (!is_array($request->enderecos)) {
+                    $endereco[0]        = json_decode($request->enderecos, true);
+                    $request->enderecos = $endereco;
+                }
+
+                $user->enderecos()->createMany($request->enderecos);
             }
 
-            $user->enderecos()->createMany($request->enderecos);
-        }
+            if ($request->telefones) {
+                if (!is_array($request->telefones)) {
+                    $telefone[0]        = json_decode($request->telefones, true);
+                    $request->telefones = $telefone;
+                }
 
-        if ($request->telefones) {
-            if (!is_array($request->telefones)) {
-                $telefone[0] = json_decode($request->telefones, true);
-                $request->telefones = $telefone;
+                $user->telefones()->createMany($request->telefones);
             }
-
-            $user->telefones()->createMany($request->telefones);
-        }
+        });
 
         return $user;
     }
@@ -157,6 +154,21 @@ class UserController extends Controller
 
         $user = Usuario::find($id);
 
+        if ($request->arquivo) {
+            $cert      = new SecController();
+            $dadosCert = $cert->readCertificate($request);
+
+            if (isset($dadosCert)) {
+                $carbon = new Carbon();
+
+                $user->certificado            = $dadosCert['filename'];
+                $user->certificado_dn         = $dadosCert['dn'];
+                $user->certificado_issuer_dn  = $dadosCert['issuer_dn'];
+                $user->certificado_not_before = $carbon::parse($dadosCert['validityNotBefore'])->toDateTimeString();
+                $user->certificado_not_after  = $carbon::parse($dadosCert['validityNotAfter'])->toDateTimeString();
+            }
+        }
+
         if (!$user) {
             return response()->json(['error' => 'Usuário não encontrado'], 404);
         }
@@ -173,21 +185,31 @@ class UserController extends Controller
         if (!empty($request->password))
             $user->password = Hash::make($request->password);
 
-        $user->update();
 
-        if($request->enderecos) {
-            foreach($request->enderecos as $end) {
-                $endereco = Endereco::find($end["id"]);
-                $endereco->update($end);
-            }
-        }
+        DB::transaction(function () use ($user, $request) {
+            $user->update();
 
-        if($request->telefones) {
-            foreach($request->telefones as $tel) {
-                $telefone = Telefone::find($tel["id"]);
-                $telefone->update($tel);
+            if ($request->enderecos) {
+
+                if (!is_array($request->enderecos)) {
+                    $endereco           = json_decode($request->enderecos, true);
+                    $request->enderecos = $endereco;
+                }
+
+                $endereco = Endereco::find($request->enderecos["id"]);
+                $endereco->update($request->enderecos);
             }
-        }
+
+            if ($request->telefones) {
+                if (!is_array($request->telefones)) {
+                    $telefones          = json_decode($request->telefones, true);
+                    $request->telefones = $telefones;
+                }
+
+                $telefone = Telefone::find($request->telefones["id"]);
+                $telefone->update($request->telefones);
+            }
+        });
 
         $user = Usuario::with(['enderecos', 'telefones'])->where('id', $id)->get()->toArray();
         unset($user["password"]);
@@ -219,5 +241,24 @@ class UserController extends Controller
         $user->delete();
 
         return $user;
+    }
+
+    public function existeUser($dados)
+    {
+        $msg  = '';
+        $user = Usuario::whereEmail($dados->email)->first();
+
+        if ($user) {
+            $msg = 'Usuário já cadastrado com esse email.';
+        } else {
+            $user = Usuario::whereCpf($dados->cpf)->first();
+
+            if ($user) {
+                $msg = 'Usuário já cadastrado com esse CPF';
+            }
+        }
+
+
+        return $msg;
     }
 }

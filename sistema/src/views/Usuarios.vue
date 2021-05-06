@@ -1,29 +1,42 @@
 <template>
   <v-container>
     <v-layout column class="card table">
-      <v-flex mb-5>Listagem de usuários</v-flex>
+      <h3 class="mb-5">Listagem de usuários</h3>
 
       <v-data-table
         v-show="buscou"
         :headers="headers"
         :items="usuarios"
         :items-per-page="5"
+        :item-class= "row_classes"
         class="elevation-1"
       >
         <template v-slot:item.data_nascimento="{ item }">
           {{ item.data_nascimento | moment }}
         </template>
 
-        <template v-slot:item.btn="{ item }">
+        <template v-slot:item.detalhes="{ item }">
           <v-btn @click="detalhes(item.id)">
             Detalhes
+          </v-btn>
+        </template>
+
+        <template v-slot:item.editar="{ item }">
+          <v-btn @click="editar(item.id)" color="blue" dark>
+            <v-icon>mdi-pencil</v-icon>
+          </v-btn>
+        </template>
+
+        <template v-slot:item.excluir="{ item }">
+          <v-btn @click="excluir(item.id)" color="red" dark>
+            <v-icon>mdi-close</v-icon>
           </v-btn>
         </template>
       </v-data-table>
 
       <v-row class="mt-10" v-show="exibirDetalhes">
         <v-col>
-          <v-flex><h2>Listagem de usuários</h2></v-flex>
+          <v-flex><h4>Detalhes do usuário</h4></v-flex>
 
           <v-card mt-5 style="padding: 10px;" color="#607d8b" dark>
             <v-app-bar
@@ -37,7 +50,7 @@
             </v-app-bar>
             <v-row wrap>
 
-              <v-col cols="6">
+              <v-col cols="4">
                 <h4>Dados cadastrais</h4>
 
                 <b>Nome:</b> {{ selectedUser.name }} <br>
@@ -45,12 +58,12 @@
                 <b>E-mail:</b> {{ selectedUser.email }} <br>
                 <b>Data de nascimento:</b> {{ selectedUser.data_nascimento | moment }} <br>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="4">
                 <h4>Telefone</h4>
                 <b>Telefone Fixo:</b> {{ selectedUserTelefone.telefone_fixo}} <br>
                 <b>Telefone Celular:</b> {{ selectedUserTelefone.telefone_celular }} <br>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="4">
                 <h4>Endereço</h4>
 
                 <b>Logradouro:</b> {{ selectedUserEndereco.logradouro}} <br>
@@ -60,15 +73,14 @@
                 <b>Cep:</b> {{ selectedUserEndereco.cep}} <br>
                 <b>Cidade:</b> {{ selectedUserEndereco.cidade}} <br>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="12">
                 <h4>Dados do certificado</h4>
-                <v-flex v-if="userLogado === selectedUser.id">
-                  <b>Arquivo: </b> {{ selectedUser.certificado }} <br>
-                  <b>DN: </b> {{ selectedUser.certificado_dn }} <br>
-                  <b>ISSUER DN:</b> {{ selectedUser.certificado_issuer_dn }} <br>
-                  <b>Válido:</b> {{ `De ${selectedUser.certificado_not_before} até ${selectedUser.certificado_not_after}` }} <br>
+                <v-flex v-if="podeVerCertificado">
+                  <b>Subject DN: </b> {{ selectedUser.certificado_dn }} <br>
+                  <b>Issuer DN:</b> {{ selectedUser.certificado_issuer_dn }} <br>
+                  <b>Válido:</b> {{ `Não antes de ${selectedUser.certificado_not_before}` }} <br> {{ `Não depois de ${selectedUser.certificado_not_after}` }}
                 </v-flex>
-                <v-flex v-if="userLogado !== selectedUser.id">
+                <v-flex v-if="!podeVerCertificado && temCertificado">
                   Esse certificado não pertence a você. Para ver os dados desse certificado, faça login com esse usuário.
                 </v-flex>
               </v-col>
@@ -107,18 +119,25 @@ export default {
       {
         text: 'Nome',
         align: 'start',
-        sortable: false,
         value: 'name',
       },
       {text: 'CPF', value: 'cpf'},
       {text: 'E-mail', value: 'email'},
       {text: 'Data de nascimento', value: 'data_nascimento'},
-      {Text: '', value: 'btn'}
+      {Text: '', value: 'detalhes'},
+      {Text: 'Editar', value: 'editar'},
+      {Text: 'Excluir', value: 'excluir'}
     ]
   }),
   computed: {
     userLogado: function() {
-      return this.$session.get('id')
+      return this.$session.get('id_usuario')
+    },
+    podeVerCertificado: function() {
+      return this.userLogado === this.selectedUser.id && this.selectedUser.certificado
+    },
+    temCertificado: function() {
+      return this.selectedUser.certificado
     }
   },
   filters: {
@@ -152,6 +171,30 @@ export default {
       if (!this.selectedUserEndereco)
         this.selectedUserEndereco = {}
 
+    },
+    editar(id) {
+
+      let params = {
+        dados: this.usuarios.find((s) => s.id === id)
+      }
+
+      this.$router.push({ name: 'Novo', params })
+    },
+    excluir(id) {
+      this.$http.delete(`delete/${id}`).then((r) => {
+        if (r.data.error) {
+          this.$alert(r.data.error)
+        } else if (r.data.id) {
+          this.$alert("Usuário deletado com sucesso.")
+          this.exibirDetalhes = false
+          this.listar()
+        }
+      })
+    },
+    row_classes(item) {
+      if (item.id === this.userLogado) {
+        return "green dark";
+      }
     }
   }
 }

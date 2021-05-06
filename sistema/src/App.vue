@@ -27,6 +27,17 @@
           </v-list-item-content>
         </v-list-item>
 
+        <v-list-item>
+        <v-list-item-action>
+          <v-icon>mdi-certificate</v-icon>
+        </v-list-item-action>
+        <v-list-item-content>
+          <v-list-item-title>
+            <router-link to="/certificado">Checar certificado</router-link>
+          </v-list-item-title>
+        </v-list-item-content>
+        </v-list-item>
+
       </v-list>
     </v-navigation-drawer>
 
@@ -42,6 +53,8 @@
       <v-toolbar-title>Sistema</v-toolbar-title>
 
       <v-spacer></v-spacer>
+
+      {{ $session.get('email') }}
 
       <v-app-bar-nav-icon @click="logout">
         <v-tooltip bottom>
@@ -120,6 +133,14 @@ export default {
         this.$router.replace("/logout")
       });
     }
+  },
+  watch: {
+    $route: {
+      immediate: true,
+      handler(to) {
+        document.title = to.meta.title || 'Sistema';
+      }
+    },
   }
 }
 </script>

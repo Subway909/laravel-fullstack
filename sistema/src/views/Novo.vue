@@ -5,6 +5,18 @@
       v-model="valid"
       :lazy-validation="true">
 
+      <v-row style="margin: 20px 0 30px 0;">
+
+        <h2>{{ tipo_cadastro }} de Usuário</h2>
+        <v-spacer></v-spacer>
+
+        <v-btn color="green" dark @click="novo">
+          <v-icon>mdi-plus</v-icon>
+          Novo cadastro
+        </v-btn>
+
+      </v-row>
+
       <h3>Dados cadastrais</h3>
       <v-row>
         <!--nome, email, senha-->
@@ -64,6 +76,7 @@
             v-model="model.cpf"
             label="CPF"
             v-mask="'###.###.###-##'"
+            :rules="cpfRules"
             required
             outlined
             validate-on-blur>
@@ -161,7 +174,7 @@
           </v-text-field>
 
           <v-text-field
-            v-model="model.complemento"
+            v-model="model.enderecos.complemento"
             label="Complemento"
             required
             outlined
@@ -191,14 +204,16 @@
 </template>
 
 <script>
-//import { validate } from 'gerador-validador-cpf'
+import {validate} from 'gerador-validador-cpf'
 
 export default {
   data: () => ({
     picker: false,
     pass_visible: false,
     dialog_msg: '',
+    edicao: false,
     model: {
+      id: '',
       name: '',
       email: '',
       password: '',
@@ -207,7 +222,8 @@ export default {
       arquivo: null,
       telefones: {
         telefone_fixo: '',
-        telefone_celular: ''
+        telefone_celular: '',
+        id: ''
       },
       enderecos: {
         logradouro: '',
@@ -215,10 +231,14 @@ export default {
         numero: '',
         cep: '',
         cidade: '',
-        complemento: ''
+        complemento: '',
+        id: '',
       }
     },
     valid: true,
+    cpfRules: [
+      v => validate(v) || 'CPF inválido'
+    ],
     nameRules: [
       v => !!v || 'Nome é obrigatório',
       v => (v && v.length >= 10) || 'O nome precisa ter pelo menos 10 caracteres',
@@ -240,16 +260,17 @@ export default {
       value => !value || value.size < 500000 || 'Arquivo deve ser menor do que 500 kb'
     ]
   }),
+  computed: {
+    tipo_cadastro: function () {
+      return this.edicao ? 'Edição ' : 'Cadastro'
+    }
+  },
   methods: {
     buscaCep(cep) {
-      console.log(cep)
-
       if (cep.length === 9) {
         this.$http.get('cep', {params: {cep: cep}}).then((r) => {
-          console.log(r)
-
           if (r.status === 200) {
-            if (r.data.bairro)
+            if (r.data.bairro && r.data.logradouro)
               this.model.enderecos.bairro = r.data.bairro
 
             if (r.data.logradouro)
@@ -282,23 +303,70 @@ export default {
 
         dadosForm.append('arquivo', this.model.arquivo)
 
-        this.$http.post('store', dadosForm).then((r) => {
-          console.log(r)
+        if (this.edicao) {
+          let id = this.model.id
 
-          if (r.status === 201) {
-            this.$alert("Usuário cadastrado com sucesso.")
-            this.$router.push('/usuarios')
-          }
-        }).catch(err => {
-          this.$alert('Ocorreu um erro: ' + err)
-          console.error(err)
-        })
+          dadosForm.append('id', id)
+
+          this.$http.post(`update/${id}`, dadosForm).then((r) => {
+            if (r.status === 200) {
+              this.$alert("Usuário editado com sucesso.")
+              this.$router.push('/usuarios')
+            } else if (r.data.error) {
+              this.$alert(r.data.error)
+            }
+          })
+        } else {
+          this.$http.post('store', dadosForm).then((r) => {
+            if (r.status === 201) {
+              this.$alert("Usuário cadastrado com sucesso.")
+              this.$router.push('/usuarios')
+            } else if (r.data.error) {
+              this.$alert(r.data.error)
+            }
+          }).catch(err => {
+            console.log(err)
+            this.$alert('Ocorreu um erro: ' + err)
+          })
+        }
       }
+    },
+    preencherDados(dados) {
+      if (dados) {
+        this.model.id = dados.id
+        this.model.name = dados.name
+        this.model.cpf = dados.cpf
+        this.model.data_nascimento = dados.data_nascimento
+        this.model.email = dados.email
+
+        this.model.enderecos.logradouro = dados.enderecos.logradouro
+        this.model.enderecos.bairro = dados.enderecos.bairro
+        this.model.enderecos.cep = dados.enderecos.cep
+        this.model.enderecos.cidade = dados.enderecos.cidade
+        this.model.enderecos.complemento = dados.enderecos.complemento
+        this.model.enderecos.numero = dados.enderecos.numero
+        this.model.enderecos.id = dados.enderecos.id
+
+        this.model.telefones.telefone_celular = dados.telefones.telefone_celular
+        this.model.telefones.telefone_fixo = dados.telefones.telefone_fixo
+        this.model.telefones.id = dados.telefones.id
+      }
+    },
+    novo() {
+      this.edicao = false
+      this.$refs.form.reset()
+      this.model.id = ''
     }
   },
   mounted() {
+    if (this.$route.params.dados) {
+      this.preencherDados(this.$route.params.dados)
+      this.edicao = true
+    }
 
-    let debug = true
+    console.log('edicao ' + this.edicao)
+
+    let debug = false
 
     if (debug) {
       this.model.name = 'henzo teste'
@@ -312,6 +380,11 @@ export default {
 
       this.model.enderecos.cep = '15085-895'
       this.model.enderecos.numero = '123'
+      this.model.enderecos.logradouro = 'teste rua'
+      this.model.enderecos.bairro = 'teste bairro'
+      this.model.enderecos.numero = 'teste rua'
+      this.model.enderecos.cidade = 'sao jose do rio preto'
+      this.model.enderecos.complemento = 'casa 80'
 
       this.buscaCep(this.model.enderecos.cep)
     }
