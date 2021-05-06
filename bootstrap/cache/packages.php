@@ -58,6 +58,13 @@
       0 => 'Laravel\\Tinker\\TinkerServiceProvider',
     ),
   ),
+  'mtrajano/laravel-swagger' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Mtrajano\\LaravelSwagger\\SwaggerServiceProvider',
+    ),
+  ),
   'nesbot/carbon' => 
   array (
     'providers' => 

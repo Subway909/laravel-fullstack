@@ -12,6 +12,7 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
+        "mtrajano/laravel-swagger": "^0.6.4",
         "phpseclib/phpseclib": "^3.0",
         "tymon/jwt-auth": "^1.0"
     },
