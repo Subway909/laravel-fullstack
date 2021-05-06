@@ -24,6 +24,8 @@ class SecController extends Controller
 
         $dados["filename"] = self::storeCert($cert);
 
+        Log::info("Lendo arquivo: ".$dados["filename"]);
+
         try {
             $x509 = new X509();
             $cert = $x509->loadX509(File::get($cert->arquivo->getRealPath()));
@@ -33,6 +35,8 @@ class SecController extends Controller
 
             $dados['validityNotBefore'] = $cert["tbsCertificate"]["validity"]["notBefore"]["utcTime"];
             $dados['validityNotAfter']  = $cert["tbsCertificate"]["validity"]["notAfter"]["utcTime"];
+
+            Log::info(print_r($dados, true));
         } catch (\Exception $e) {
             Log::error('Erro ao ler o certificado: ' . $e->getMessage());
         }

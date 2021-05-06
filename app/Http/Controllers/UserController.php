@@ -7,7 +7,6 @@ use App\Models\Telefone;
 use App\Rules\ChecaCpf;
 use App\Rules\ChecaMascaraCpf;
 use App\Rules\ChecaNomeCompleto;
-use Carbon\Traits\Creator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\User;
 use \App\Models\User as Usuario;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -74,6 +73,9 @@ class UserController extends Controller
 
         DB::transaction(function () use ($user, $request) {
             $user->save();
+
+            Log::debug("Criando usuário: Nome: $user->name Email: $user->email");
+            Log::info(print_r($user->toArray(), true));
 
             if ($request->enderecos) {
                 if (!is_array($request->enderecos)) {
@@ -188,6 +190,9 @@ class UserController extends Controller
 
         DB::transaction(function () use ($user, $request) {
             $user->update();
+
+            Log::debug("Atualizando usuário: Nome: $user->name Email: $user->email");
+            Log::info(print_r($user->toArray(), true));
 
             if ($request->enderecos) {
 
