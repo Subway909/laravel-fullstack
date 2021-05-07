@@ -122,6 +122,7 @@ export default {
   mounted() {
     const loading = this.$refs.loading
 
+    // toda vez que o axios disparar esses eventos, deve mostrar o loading na tela
     events.$on(['loadingStart', 'httpStart'], () => loading.start())
     events.$on(['loadingDone', 'httpDone'], () => loading.done())
   },

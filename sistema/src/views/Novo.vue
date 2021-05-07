@@ -395,29 +395,6 @@ export default {
       this.preencherDados(this.$route.params.dados)
       this.edicao = true
     }
-
-    let debug = false
-
-    if (debug) {
-      this.model.name = 'henzo teste'
-      this.model.email = 'henzotestse@teste.com'
-      this.model.cpf = '822.637.560-60'
-      this.model.password = '123'
-      this.model.data_nascimento = '2000-01-10'
-
-      this.model.telefones.telefone_fixo = '(17) 3333-3333'
-      this.model.telefones.telefone_celular = '(17) 99999-9999'
-
-      this.model.enderecos.cep = '15085-895'
-      this.model.enderecos.numero = '123'
-      this.model.enderecos.logradouro = 'teste rua'
-      this.model.enderecos.bairro = 'teste bairro'
-      this.model.enderecos.numero = 'teste rua'
-      this.model.enderecos.cidade = 'sao jose do rio preto'
-      this.model.enderecos.complemento = 'casa 80'
-
-      this.buscaCep(this.model.enderecos.cep)
-    }
   }
 }
 </script>

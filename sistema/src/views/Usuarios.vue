@@ -192,6 +192,7 @@ export default {
       })
     },
     row_classes(item) {
+      // seta cor diferente na linha da tabela correspondente ao usuário logado
       if (item.id === this.userLogado) {
         return "bg-user";
       }

@@ -36,7 +36,7 @@ class SecController extends Controller
             $dados['validityNotBefore'] = $cert["tbsCertificate"]["validity"]["notBefore"]["utcTime"];
             $dados['validityNotAfter']  = $cert["tbsCertificate"]["validity"]["notAfter"]["utcTime"];
 
-            Log::info(print_r($dados, true));
+            Log::info(print_r($dados, true)); //todo em prod não logar dados de certificado
         } catch (\Exception $e) {
             Log::error('Erro ao ler o certificado: ' . $e->getMessage());
         }
@@ -52,7 +52,6 @@ class SecController extends Controller
         } catch (\Exception $e) {
             Log::error('Não foi possível salvar o arquivo: ' . $e->getMessage());
         }
-
 
         return $filename;
     }

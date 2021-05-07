@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 class CepController extends Controller
 {
     public function getCep(Request $request) {
+        //integração com o viacep para buscar ceps
         try {
             $zipCodeInfo = ZipCode::find($request->cep);
 

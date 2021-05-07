@@ -24,7 +24,7 @@ http.interceptors.request.use(function (config) {
   const session = events.$session
 
   if (session.exists()) {
-    // envia o token JWT
+    // envia o token JWT em todos os requests para a api
     config.headers['Authorization'] = `Bearer ${session.get('token')}`
   }
 
@@ -67,6 +67,7 @@ http.interceptors.response.use(function (response) {
 
   const token = response.headers['authorization']
   if (token) {
+    // seta o token na sessão
     session.set('token', token.replace(/^(Bearer )/, ''))
   }
 
@@ -81,6 +82,7 @@ http.interceptors.response.use(function (response) {
 
   const status = get(error, 'response.status', 500)
 
+  // se retorar http 401 e 403, terminou a sessão, redireciona para a tela de login
   if (session.exists() && includes([401, 403], status)) {
     router.replace('/login', () => {})
     session.destroy()

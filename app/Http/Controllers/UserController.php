@@ -56,6 +56,7 @@ class UserController extends Controller
         $user->data_nascimento = $request->data_nascimento;
         $user->password        = Hash::make($request->password);
 
+        // se tiver certificado, coloca os dados no model de usuario
         if ($request->arquivo) {
             $cert      = new SecController();
             $dadosCert = $cert->readCertificate($request);
@@ -132,6 +133,7 @@ class UserController extends Controller
             'cpf' => "$req |unique:users,cpf,$id"
         ]);
 
+        // funções custom para validação
         if (!empty($request->cpf)) {
             $request->validate(["cpf" => new ChecaCpf()]);
             $request->validate(["cpf" => new ChecaMascaraCpf()]);
@@ -274,7 +276,6 @@ class UserController extends Controller
                 $msg = 'Usuário já cadastrado com esse CPF';
             }
         }
-
 
         return $msg;
     }

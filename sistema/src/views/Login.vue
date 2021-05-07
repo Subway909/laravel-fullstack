@@ -110,9 +110,6 @@ export default {
         })
       }
     }
-  },
-  mounted() {
-    console.log('loaded login')
   }
 }
 </script>
