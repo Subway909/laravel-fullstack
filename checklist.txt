@@ -1,0 +1,50 @@
+Backend
+	* - Docker
+	* - Mysql
+	* - Migrations
+	* - DB Seed
+	*- API
+		* - User
+		* - JWT
+		* - Rotas user
+			* - Criar user
+			* - Editar user
+			* - Listar user
+			* - Listar todos os users
+			* - Excluir User
+		* - Implementar phpseclib
+			* - Upload certificado
+			* - Ler certificado
+		* - Testes unitários
+			* - User
+			* - Certificado
+		* - Documentar API Swagger
+		* - API Viacep
+		* - Verificar certificado
+		* - Logs logs
+		* - README
+
+Frontend
+	* - Vue Cli
+	* - Vuetify
+	* - Auth (JWT)
+	* - Painel
+	* - Router
+	* - Alert
+	* - Loading
+	- Telas
+		* - Login
+		* - Cadastro user
+			* - Endereço
+			* - Telefones
+		* - Listagem User
+		* - Detalhe user
+			* - Telefones
+			* - Endereços
+			* - Certificado
+		*- Ler certificado
+
+Testes
+	* - Testes unitários
+		* - API
+		* - Certificado
