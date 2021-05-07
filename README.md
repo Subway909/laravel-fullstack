@@ -1,62 +1,96 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+PHP Fullstack - API em Laravel com Vue no frontend
+=====
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Arquitetura client server com uma API em Laravel no backend, e frontend em Vue.
 
-## About Laravel
+Setup
+=====
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Instale o [Docker](https://docs.docker.com/get-started/).
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Abra o terminal na raiz da aplicação e digite o comando:
+```sh
+docker-compose up -d
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+![docker_compose](_readme_images/1.png)
 
-## Learning Laravel
+Depois de concluído, o banco MYSQL já está criado e os comandos do artisan de `migrate` e `db:seed` já devem ter sido rodados automaticamente. A API já está pronta e pode ser acessada pela rota `http://localhost:8001/api/`
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Para testar se está funcionando pode dar um `GET` na rota `/`:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+![ping](_readme_images/2.png)
 
-## Laravel Sponsors
+Rotas
+=====
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+```
++--------+----------+-----------------+------+----------------------------------------------------+------------+
+| Domain | Method   | URI             | Name | Action                                             | Middleware |
++--------+----------+-----------------+------+----------------------------------------------------+------------+
+|        | GET|HEAD | /               |      | Closure                                            | web        |
+|        | GET|HEAD | api             |      | Closure                                            | api        |
+|        | GET|HEAD | api/cep         |      | App\Http\Controllers\CepController@getCep          | api        |
+|        |          |                 |      |                                                    | auth       |
+|        | POST     | api/certificado |      | App\Http\Controllers\SecController@readCertificate | api        |
+|        |          |                 |      |                                                    | auth       |
+|        | DELETE   | api/delete/{id} |      | App\Http\Controllers\UserController@destroy        | api        |
+|        |          |                 |      |                                                    | auth       |
+|        | GET|HEAD | api/index       |      | App\Http\Controllers\UserController@index          | api        |
+|        |          |                 |      |                                                    | auth       |
+|        | GET|HEAD | api/login       |      | App\Http\Controllers\AuthController@login          | api        |
+|        | GET|HEAD | api/me          |      | App\Http\Controllers\AuthController@me             | api        |
+|        |          |                 |      |                                                    | auth       |
+|        | POST     | api/store       |      | App\Http\Controllers\UserController@store          | api        |
+|        |          |                 |      |                                                    | auth       |
+|        | POST     | api/update/{id} |      | App\Http\Controllers\UserController@update         | api        |
+|        |          |                 |      |                                                    | auth       |
+|        | GET|HEAD | api/user        |      | Closure                                            | api        |
+|        |          |                 |      |                                                    | auth:api   |
+|        | GET|HEAD | api/user/{id}   |      | App\Http\Controllers\UserController@show           | api        |
+|        |          |                 |      |                                                    | auth       |
++--------+----------+-----------------+------+----------------------------------------------------+------------+
 
-### Premium Partners
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
+- Antes de consumir a API é necessário logar chamando a rota de login com o usuário `login@email.com` senha `123456` (esses dados estão parametrizados no `.env`)
+- O login irá retornar um token que deve ser usado para autenticar as demais rotas.
+- Também está disponível na pasta `postman` uma collection e um environment do Postman com todas as rotas. Essa collection já está pronta para adicionar automaticamente o token retornado pelo login em todas as requisições.
 
-## Contributing
+![postman1](_readme_images/8.png)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+![postman2](_readme_images/3.png)
 
-## Code of Conduct
+![postman3](_readme_images/7.png)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Teste unitários
+=====
 
-## Security Vulnerabilities
+Para rodar os testes, será necessário entrar no container do Docker para rodar o comando.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- Para listar os containers use o comando `docker ps`
+![docker_ps](_readme_images/4.png)
 
-## License
+- O nome do container é `laravel-fullstack_apache_with_php_1`
+- Pode ser acessado com o comando `docker exec -it laravel-fullstack_apache_with_php_1 bash`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- Para rodar os testes, rode o comando `php artisan test`
+![test](_readme_images/5.png)
+
+DB
+=====
+![db](_readme_images/6.png)
+Configuração do DB. User `admin` senha `1234` (parametrizado no .env)
+
+Screenshots
+=====
+
+![screenshot1](_readme_images/9.png)
+
+![screenshot1](_readme_images/10.png)
+
+![screenshot1](_readme_images/11.png)
+
+![screenshot1](_readme_images/12.png)
+
+![screenshot1](_readme_images/13.png)

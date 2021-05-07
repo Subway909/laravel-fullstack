@@ -1,0 +1,433 @@
+{
+	"info": {
+		"_postman_id": "420fdcbb-b6a8-4a00-9d78-1078a689b208",
+		"name": "Laravel Fullstack",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.environment.set(\"token\", jsonData.access_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/login?email=login@email.com&password=123456",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "login@email.com"
+						},
+						{
+							"key": "password",
+							"value": "123456"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Qual user está logado no momento?",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/me",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar todos os usuários",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/index",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"index"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar usuário por id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/user/42",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user",
+						"42"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criar usuário",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"novo user new a\",\r\n    \"email\": \"novo@usernewaaaaa.com\",\r\n    \"password\": \"112233\",\r\n    \"cpf\": \"651.065.140-88\",\r\n    \"data_nascimento\": \"2001-01-02\",\r\n    \"enderecos\": {\r\n        \"logradouro\": \"teste logradouro\",\r\n        \"numero\": \"123\",\r\n        \"bairro\": \"teste bairro\",\r\n        \"cep\": \"15050-050\",\r\n        \"complemento\": \"teste complemento\",\r\n        \"cidade\": \"teste cidade\"\r\n    },\r\n    \"telefones\": {\r\n        \"telefone_fixo\": \"(17) 3222-2222\",\r\n        \"telefone_celular\": \"(17) 99999-9999\"\r\n    }\r\n}"
+				},
+				"url": {
+					"raw": "{{url}}/store",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"store"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Editar usuário",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Joaquin Alessandro Queirós Filho editado 2\",\r\n    \"email\": \"rivera.tamara@example.net\",\r\n    \"password\": \"112233\",\r\n    \"cpf\": \"762.642.771-85\",\r\n    \"data_nascimento\": \"2001-01-01\",\r\n    \"enderecos\": {\r\n        \"id\": 1,\r\n        \"logradouro\": \"rua teste editado 2\",\r\n        \"numero\": \"123\",\r\n        \"bairro\": \"teste bairro\",\r\n        \"cep\": \"15050-050\",\r\n        \"complemento\": \"teste complemento\",\r\n        \"cidade\": \"teste cidade\"\r\n    },\r\n    \"telefones\": {\r\n        \"id\": 1,\r\n        \"telefone_fixo\": \"(17) 3222-1111\",\r\n        \"telefone_celular\": \"(17) 99999-1111\"\r\n    }\r\n}"
+				},
+				"url": {
+					"raw": "{{url}}/update/3",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"update",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deletar usuário",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{url}}/delete/3",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"delete",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ping",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consultar CEP",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/cep/15085-895",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"cep",
+						"15085-895"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://localhost:8001/"
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}
