@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -24,6 +25,8 @@ class AuthController extends Controller
             $user->qtd_acessos = $user->qtd_acessos + 1;
 
             $user->save();
+
+            Log::debug("Login realizado: ".$user->email);
         }
 
         return $this->respondWithToken($token, $user);

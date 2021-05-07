@@ -80,20 +80,26 @@ class UserController extends Controller
 
             if ($request->enderecos) {
                 if (!is_array($request->enderecos)) {
-                    $endereco        = json_decode($request->enderecos, true);
+                    $endereco           = json_decode($request->enderecos, true);
                     $request->enderecos = $endereco;
                 }
 
                 $user->enderecos()->create($request->enderecos);
+
+                Log::debug('Cadastrando endereço:');
+                Log::info(print_r($request->enderecos, true));
             }
 
             if ($request->telefones) {
                 if (!is_array($request->telefones)) {
-                    $telefone       = json_decode($request->telefones, true);
+                    $telefone           = json_decode($request->telefones, true);
                     $request->telefones = $telefone;
                 }
 
                 $user->telefones()->create($request->telefones);
+
+                Log::debug('Cadastrando telefones:');
+                Log::info(print_r($request->telefones, true));
             }
         });
 
@@ -207,8 +213,7 @@ class UserController extends Controller
 
                 if ($enderecoModel) {
                     $enderecoModel->update($request->enderecos);
-                }
-                else {
+                } else {
                     $user->enderecos()->create($request->enderecos);
                 }
             }
@@ -223,8 +228,7 @@ class UserController extends Controller
 
                 if ($telefoneModel) {
                     $telefoneModel->update($request->telefones);
-                }
-                else {
+                } else {
                     $user->telefones()->create($request->telefones);
                 }
             }
