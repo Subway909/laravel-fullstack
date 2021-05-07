@@ -3,6 +3,19 @@ PHP Fullstack - API em Laravel com Vue no frontend
 
 Arquitetura client server com uma API em Laravel no backend, e frontend em Vue.
 
+Screenshots
+=====
+
+![screenshot1](_readme_images/9.png)
+
+![screenshot1](_readme_images/10.png)
+
+![screenshot1](_readme_images/11.png)
+
+![screenshot1](_readme_images/12.png)
+
+![screenshot1](_readme_images/13.png)
+
 Setup
 =====
 
@@ -81,16 +94,3 @@ DB
 =====
 ![db](_readme_images/6.png)
 Configuração do DB. User `admin` senha `1234` (parametrizado no .env)
-
-Screenshots
-=====
-
-![screenshot1](_readme_images/9.png)
-
-![screenshot1](_readme_images/10.png)
-
-![screenshot1](_readme_images/11.png)
-
-![screenshot1](_readme_images/12.png)
-
-![screenshot1](_readme_images/13.png)
