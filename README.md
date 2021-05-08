@@ -76,6 +76,14 @@ Rotas
 
 ![postman3](_readme_images/7.png)
 
+Vue
+=====
+
+Dentro da pasta `sistema`, rode o comando `npm install`. Após a instalação das dependências, rode o comando `npm run serve`. O comando vai retornar uma url para acessar o frontend da aplicação:
+
+![vue](_readme_images/14.png)
+
+
 Teste unitários
 =====
 
