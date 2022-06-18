@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Canducci\ZipCode\Facades\ZipCode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class CepController extends Controller
 {
     public function getCep(Request $request) {
-        //integração com o viacep para buscar ceps
         try {
-            $zipCodeInfo = ZipCode::find($request->cep);
+            $url = VIACEP_URL.$request->cep."/json/";
+            $zipCodeInfo = Http::get($url);
 
-            if (!$zipCodeInfo) {
-                throw new \Exception('Não foi possível buscar o CEP');
+            if ($zipCodeInfo) {
+                return $zipCodeInfo->json();
             }
 
-            return $zipCodeInfo->getArray();
+            throw new \Exception('Unable to locate zipcode');
         }
         catch (\Exception $e) {
             Log::error($e->getMessage());
