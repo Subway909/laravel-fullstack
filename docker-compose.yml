@@ -49,11 +49,11 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
 
-  composer:
-    image: ${COMPOSE_PROJECT_NAME}_apache_with_php
-    volumes_from: [apache_with_php]
-    working_dir: /var/www/html
-    command: composer update -o
+#  composer:
+#    image: apache_with_php
+#    volumes_from: [apache_with_php]
+#    working_dir: /var/www/html
+#    command: composer update -o
 
 volumes:
   persistent:

@@ -7,6 +7,7 @@ RUN mkdir -p /var/log/XDebug \
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     vim \
+    nano \
     libpq-dev \
     libmagickwand-dev \
     libgmp-dev \
@@ -21,6 +22,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     ghostscript \
+    sudo \
     && rm -r /var/lib/apt/lists/*
 
 RUN ln -s /usr/include/x86_64-linux-gnu/gmp.h /usr/include/gmp.h
