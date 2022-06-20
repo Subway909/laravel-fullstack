@@ -7,17 +7,17 @@
 
       <v-row style="margin: 20px 0 30px 0;">
 
-        <h2>{{ tipo_cadastro }} de Usuário</h2>
+        <h2>{{ tipo_cadastro }} user</h2>
         <v-spacer></v-spacer>
 
-        <v-btn color="orange" dark @click="novo">
+        <v-btn color="orange" dark @click="newUser">
           <v-icon>mdi-plus</v-icon>
-          Novo cadastro
+          New user
         </v-btn>
 
       </v-row>
 
-      <h3>Dados cadastrais</h3>
+      <h3>User data</h3>
       <v-row>
         <!--nome, email, senha-->
         <v-col>
@@ -26,7 +26,7 @@
             :counter="100"
             maxlength="100"
             :rules="nameRules"
-            label="Nome"
+            label="Name"
             required
             outlined
             validate-on-blur>
@@ -38,7 +38,7 @@
             :counter="100"
             name="userField"
             autocomplete="new-password"
-            label="E-mail"
+            label="Email"
             required
             outlined
             validate-on-blur>
@@ -55,7 +55,7 @@
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
                 v-model="model.data_nascimento"
-                label="Data de nascimento"
+                label="Date of birth"
                 prepend-icon="mdi-calendar"
                 readonly
                 required
@@ -99,13 +99,13 @@
         </v-col>
       </v-row>
 
-      <h3>Telefones</h3>
+      <h3>Phones</h3>
       <v-row>
         <v-col>
           <v-text-field
             v-model="model.telefones.telefone_fixo"
             :rules="telefoneRules"
-            label="Telefone fixo"
+            label="Landline"
             v-mask="'(##) ####-####'"
             required
             outlined
@@ -117,7 +117,7 @@
           <v-text-field
             v-model="model.telefones.telefone_celular"
             :rules="telefoneRules"
-            label="Telefone celular"
+            label="Mobile"
             v-mask="'(##) #####-####'"
             required
             outlined
@@ -126,12 +126,12 @@
         </v-col>
       </v-row>
 
-      <h3>Endereço</h3>
+      <h3>Address</h3>
       <v-row>
         <v-col>
           <v-text-field
             v-model="model.enderecos.cep"
-            label="CEP"
+            label="ZIP Code"
             v-mask="'#####-###'"
             required
             outlined
@@ -141,7 +141,7 @@
 
           <v-text-field
             v-model="model.enderecos.numero"
-            label="Número"
+            label="Number"
             required
             outlined
             validate-on-blur>
@@ -149,7 +149,7 @@
 
           <v-text-field
             v-model="model.enderecos.cidade"
-            label="Cidade"
+            label="City"
             required
             outlined
             validate-on-blur>
@@ -159,7 +159,7 @@
         <v-col>
           <v-text-field
             v-model="model.enderecos.logradouro"
-            label="Logradouro"
+            label="Street"
             required
             outlined
             validate-on-blur>
@@ -167,7 +167,7 @@
 
           <v-text-field
             v-model="model.enderecos.bairro"
-            label="Bairro"
+            label="Neighborhood"
             required
             outlined
             validate-on-blur>
@@ -175,7 +175,7 @@
 
           <v-text-field
             v-model="model.enderecos.complemento"
-            label="Complemento"
+            label="Misc."
             required
             outlined
             validate-on-blur>
@@ -185,7 +185,7 @@
 
       <v-file-input
         accept=".pem"
-        label="Certificado"
+        label="Certificate"
         required
         ref="inputUpload"
         v-model="model.arquivo"
@@ -197,7 +197,7 @@
         color="success"
         class="mr-4"
         @click="save">
-        Enviar
+        Save
       </v-btn>
     </v-form>
   </div>
@@ -237,32 +237,28 @@ export default {
     },
     valid: true,
     cpfRules: [
-      v => validate(v) || 'CPF inválido'
+      v => validate(v) || 'Invalid CPF'
     ],
     nameRules: [
-      v => !!v || 'Nome é obrigatório',
-      v => (v && v.length >= 10) || 'O nome precisa ter pelo menos 10 caracteres',
+      v => !!v || 'Name is required',
+      v => (v && v.length >= 10) || 'The name needs to be at leas 10 characters long',
     ],
     emailRules: [
-      v => !!v || 'E-mail é obrigatório',
-      v => /.+@.+\..+/.test(v) || 'E-mail precisa ser válido',
+      v => !!v || 'Email is required',
+      v => /.+@.+\..+/.test(v) || 'Email needs to be valid',
     ],
     telefoneRules: [
-      v => !!v || 'Telefone é obrigatório',
-      v => /^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})-?(\d{4}))$/.test(v) || 'Telefone inválido'
-    ],
-    mensagemRules: [
-      v => !!v || 'Mensagem é obrigatório',
-      v => !(v && v.length > 1000) || 'Máximo de 1000 caracteres'
+      v => !!v || 'Phone is required',
+      v => /^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})-?(\d{4}))$/.test(v) || 'Invalid phone number'
     ],
     arquivoRules: [
-      v => !!v || 'Arquivo é obrigatório',
-      value => !value || value.size < 500000 || 'Arquivo deve ser menor do que 500 kb'
+      v => !!v || 'File is required',
+      value => !value || value.size < 500000 || 'File needs to be less than 500 kb'
     ]
   }),
   computed: {
     tipo_cadastro: function () {
-      return this.edicao ? 'Edição ' : 'Cadastro'
+      return this.edicao ? 'Edit ' : 'New'
     }
   },
   methods: {
@@ -310,7 +306,7 @@ export default {
 
           this.$http.post(`update/${id}`, dadosForm).then((r) => {
             if (r.status === 200) {
-              this.$alert("Usuário editado com sucesso.")
+              this.$alert("User successfully updated.")
               this.$router.push('/usuarios')
             } else if (r.data.error) {
               this.$alert(r.data.error)
@@ -319,19 +315,19 @@ export default {
         } else {
           this.$http.post('store', dadosForm).then((r) => {
             if (r.status === 201) {
-              this.$alert("Usuário cadastrado com sucesso.")
+              this.$alert("User successfully registered.")
               this.$router.push('/usuarios')
             } else if (r.data.error) {
               this.$alert(r.data.error)
             }
           }).catch(err => {
             console.log(err)
-            this.$alert('Ocorreu um erro: ' + err)
+            this.$alert('An error occurred: ' + err)
           })
         }
       }
     },
-    preencherDados(dados) {
+    fillData(dados) {
       if (dados) {
 
         if (dados.id)
@@ -384,7 +380,7 @@ export default {
         }
       }
     },
-    novo() {
+    newUser() {
       this.edicao = false
       this.$refs.form.reset()
       this.model.id = ''
@@ -392,7 +388,7 @@ export default {
   },
   mounted() {
     if (this.$route.params.dados) {
-      this.preencherDados(this.$route.params.dados)
+      this.fillData(this.$route.params.dados)
       this.edicao = true
     }
   }

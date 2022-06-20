@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Novo from '@/views/Novo.vue'
-import Usuarios from '@/views/Usuarios.vue'
-import BemVindo from '@/views/BemVindo'
+import NewUser from '@/views/NewUser.vue'
+import Users from '@/views/Users.vue'
+import Welcome from '@/views/Welcome'
 import Certificado from "@/views/Certificado";
 import Login from '@/views/Login.vue'
 import session from '../plugins/session'
@@ -17,15 +17,15 @@ const routes = [
         meta: {title: 'Login', public: true}
     },
     {
-        path: '/novo',
-        name: 'Novo',
-        component: Novo,
-        meta: {title: 'Novo Usuário'}
+        path: '/newuser',
+        name: 'New User',
+        component: NewUser,
+        meta: {title: 'New User'}
     },
     {
-        path: '/usuarios',
-        name: 'Usuarios',
-        component: Usuarios,
+        path: '/users',
+        name: 'Users',
+        component: Users,
         meta: {title: 'Lista de Usuários'}
     },
     {
@@ -43,10 +43,10 @@ const routes = [
         }
     },
     {
-        path: '/bemvindo',
-        name: 'bemvindo',
-        component: BemVindo,
-        meta: {title: 'Bem-vindo'}
+        path: '/welcome',
+        name: 'welcome',
+        component: Welcome,
+        meta: {title: 'Welcome'}
     },
 ]
 

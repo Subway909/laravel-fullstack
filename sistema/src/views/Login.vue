@@ -1,11 +1,62 @@
 <template>
   <v-container>
     <v-layout>
+      <v-row justify="end">
+        <div class="text-center">
+          <v-dialog
+            v-model="dialog"
+            width="500"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                color="blue"
+                dark
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon>
+                  mdi-chat
+                </v-icon>
+              </v-btn>
+            </template>
+
+            <v-card>
+              <v-card-title class="text-h5 grey lighten-2">
+                Hello there
+              </v-card-title>
+
+              <v-card-text>
+                <p class="mt-5">This is a little CRUD frontend application built with Vue and Vuetify. After login you can register a user, view the list of users, and submit a .pem certificate to view the certificate info.</p>
+
+                <p class="mt-5">You can login using <b>login@email.com</b> and password <b>123456</b></p>
+
+                Click <b><a @click="fillValues()">here</a></b> to fill with these values
+              </v-card-text>
+
+              <v-divider></v-divider>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="primary"
+                  text
+                  @click="dialog = false"
+                >
+                  CLOSE
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </div>
+      </v-row>
+
+    </v-layout>
+    <v-layout>
       <v-row align="center"
              justify="center">
         <v-col cols="6" sm="12" md="6">
           <v-card elevation="2" class="card-login">
-            Acesso ao sistema
+            Please log in with your email and password
 
             <v-form
               ref="form"
@@ -18,7 +69,7 @@
                 autocomplete="new-password"
                 name="userField"
                 maxlength="100"
-                label="Usuário"
+                label="Email"
                 required
                 outlined
                 :rules="emailRules"
@@ -31,7 +82,7 @@
                 autocomplete="new-password"
                 name="passField"
                 maxlength="100"
-                label="Senha"
+                label="Password"
                 :type="pass_visible ? 'text' : 'password'"
                 required
                 outlined
@@ -47,7 +98,7 @@
                 dark
                 class="mr-4"
                 @click="login">
-                Entrar
+                Log in
               </v-btn>
             </v-form>
           </v-card>
@@ -63,16 +114,22 @@
 export default {
   name: 'Login',
   data: () => ({
+    dialog: false,
     pass_visible: false,
     usuario: '',
     senha: '',
     valid: true,
     emailRules: [
-      v => !!v || 'E-mail é obrigatório',
-      v => /.+@.+\..+/.test(v) || 'E-mail precisa ser válido',
+      v => !!v || 'Email is required',
+      v => /.+@.+\..+/.test(v) || 'Email needs to be valid',
     ],
   }),
   methods: {
+    fillValues: function() {
+      this.usuario = 'login@email.com'
+      this.senha = '123456'
+      this.dialog = false
+    },
     login: function () {
       let params = {
         params: {
@@ -99,14 +156,14 @@ export default {
             this.$session.set('email', email)
             this.$session.set('login', login)
 
-            this.$router.replace('/bemvindo')
+            this.$router.replace('/welcome')
           }
 
         }).catch(err => {
           console.log(err)
           this.$session.destroy()
 
-          this.$alert("Não foi possível fazer login. Verifique seu usuário e senha e tente novamente.")
+          this.$alert("Unable to log in. Check your email and password and try again.")
         })
       }
     }

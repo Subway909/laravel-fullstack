@@ -11,7 +11,7 @@
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>
-              <router-link to="/novo">Cadastrar usuário</router-link>
+              <router-link to="/newuser">Register user</router-link>
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -22,7 +22,7 @@
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>
-              <router-link to="/usuarios">Listagem de usuários</router-link>
+              <router-link to="/users">List users</router-link>
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -33,7 +33,7 @@
         </v-list-item-action>
         <v-list-item-content>
           <v-list-item-title>
-            <router-link to="/certificado">Checar certificado</router-link>
+            <router-link to="/certificado">Check certificate</router-link>
           </v-list-item-title>
         </v-list-item-content>
         </v-list-item>
@@ -50,7 +50,7 @@
         @click.stop="drawer = !drawer"
         v-if="!isLogin"
       ></v-app-bar-nav-icon>
-      <v-toolbar-title>Sistema</v-toolbar-title>
+      <v-toolbar-title>Frontend</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
@@ -141,7 +141,7 @@ export default {
     $route: {
       immediate: true,
       handler(to) {
-        document.title = to.meta.title || 'Sistema';
+        document.title = to.meta.title || 'Frontend';
       }
     },
   }

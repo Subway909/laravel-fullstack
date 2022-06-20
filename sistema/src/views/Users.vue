@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-layout column class="card table">
-      <h3 class="mb-5">Listagem de usuários</h3>
+      <h3 class="mb-5">User list</h3>
 
       <v-data-table
         v-show="buscou"
@@ -17,7 +17,7 @@
 
         <template v-slot:item.detalhes="{ item }">
           <v-btn @click="detalhes(item.id)">
-            Detalhes
+            Info
           </v-btn>
         </template>
 
@@ -36,7 +36,7 @@
 
       <v-row class="mt-10" v-show="exibirDetalhes">
         <v-col>
-          <v-flex><h4>Detalhes do usuário</h4></v-flex>
+          <v-flex><h4>User info</h4></v-flex>
 
           <v-card mt-5 style="padding: 10px;" color="#607d8b" dark>
             <v-app-bar
@@ -51,37 +51,37 @@
             <v-row wrap>
 
               <v-col cols="4">
-                <h4>Dados cadastrais</h4>
+                <h4>User data</h4>
 
-                <b>Nome:</b> {{ selectedUser.name }} <br>
+                <b>Name:</b> {{ selectedUser.name }} <br>
                 <b>CPF:</b> {{ selectedUser.cpf }} <br>
-                <b>E-mail:</b> {{ selectedUser.email }} <br>
-                <b>Data de nascimento:</b> {{ selectedUser.data_nascimento | moment }} <br>
+                <b>Email:</b> {{ selectedUser.email }} <br>
+                <b>Date of birth:</b> {{ selectedUser.data_nascimento | moment }} <br>
               </v-col>
               <v-col cols="4">
-                <h4>Telefone</h4>
-                <b>Telefone Fixo:</b> {{ selectedUserTelefone.telefone_fixo}} <br>
-                <b>Telefone Celular:</b> {{ selectedUserTelefone.telefone_celular }} <br>
+                <h4>Phones</h4>
+                <b>Landline:</b> {{ selectedUserTelefone.telefone_fixo}} <br>
+                <b>Mobile:</b> {{ selectedUserTelefone.telefone_celular }} <br>
               </v-col>
               <v-col cols="4">
-                <h4>Endereço</h4>
+                <h4>Address</h4>
 
-                <b>Logradouro:</b> {{ selectedUserEndereco.logradouro}} <br>
-                <b>Número:</b> {{ selectedUserEndereco.numero}} <br>
-                <b>Bairro:</b> {{ selectedUserEndereco.bairro}} <br>
-                <b>Complemento:</b> {{ selectedUserEndereco.complemento}} <br>
-                <b>Cep:</b> {{ selectedUserEndereco.cep}} <br>
-                <b>Cidade:</b> {{ selectedUserEndereco.cidade}} <br>
+                <b>Street:</b> {{ selectedUserEndereco.logradouro}} <br>
+                <b>Number:</b> {{ selectedUserEndereco.numero}} <br>
+                <b>Neighborhood:</b> {{ selectedUserEndereco.bairro}} <br>
+                <b>Msic.:</b> {{ selectedUserEndereco.complemento}} <br>
+                <b>ZIP Code:</b> {{ selectedUserEndereco.cep}} <br>
+                <b>City:</b> {{ selectedUserEndereco.cidade}} <br>
               </v-col>
               <v-col cols="12">
-                <h4>Dados do certificado</h4>
+                <h4>Certificate information</h4>
                 <v-flex v-if="podeVerCertificado">
                   <b>Subject DN: </b> {{ selectedUser.certificado_dn }} <br>
                   <b>Issuer DN:</b> {{ selectedUser.certificado_issuer_dn }} <br>
-                  <b>Válido:</b> {{ `Não antes de ${selectedUser.certificado_not_before}` }} <br> {{ `Não depois de ${selectedUser.certificado_not_after}` }}
+                  <b>Valid:</b> {{ `Not before ${selectedUser.certificado_not_before}` }} <br> {{ `Not after ${selectedUser.certificado_not_after}` }}
                 </v-flex>
                 <v-flex v-if="!podeVerCertificado && temCertificado">
-                  Esse certificado não pertence a você. Para ver os dados desse certificado, faça login com esse usuário.
+                  This certificate belongs to someone else. You need to be logged in as this user to see the certificate information.
                 </v-flex>
               </v-col>
             </v-row>
@@ -99,7 +99,7 @@ import moment from 'moment'
 import _ from 'lodash'
 
 export default {
-  name: "Usuarios",
+  name: "Users",
   data: () => ({
     exibirDetalhes: false,
     buscou: false,
@@ -117,16 +117,16 @@ export default {
     ],
     headers: [
       {
-        text: 'Nome',
+        text: 'Name',
         align: 'start',
         value: 'name',
       },
       {text: 'CPF', value: 'cpf'},
-      {text: 'E-mail', value: 'email'},
-      {text: 'Data de nascimento', value: 'data_nascimento'},
-      {Text: '', value: 'detalhes'},
-      {Text: 'Editar', value: 'editar'},
-      {Text: 'Excluir', value: 'excluir'}
+      {text: 'Email', value: 'email'},
+      {text: 'Date of birth', value: 'data_nascimento'},
+      {Text: '', value: 'info'},
+      {Text: 'Edit', value: 'editar'},
+      {Text: 'Delete', value: 'excluir'}
     ]
   }),
   computed: {
@@ -178,7 +178,7 @@ export default {
         dados: this.usuarios.find((s) => s.id === id)
       }
 
-      this.$router.push({ name: 'Novo', params })
+      this.$router.push({ name: 'New User', params })
     },
     excluir(id) {
       this.$http.delete(`delete/${id}`).then((r) => {

@@ -6,12 +6,12 @@
       :lazy-validation="true">
 
       <v-row style="margin: 20px 0 30px 0;">
-        <h2>Verificar certificado</h2>
+        <h2>Check certificate</h2>
       </v-row>
 
       <v-file-input
         accept=".pem"
-        label="Certificado"
+        label="Certificate"
         required
         ref="inputUpload"
         v-model="model.arquivo"
@@ -23,17 +23,17 @@
         color="success"
         class="mr-4"
         @click="save">
-        Enviar
+        Send
       </v-btn>
     </v-form>
 
     <v-card style="padding: 10px; margin-top: 30px;" color="#607d8b" dark  v-show="certificado_dn">
       <v-col>
-        <h4>Informações do certificado</h4>
+        <h4>Certificate info</h4>
         <b>Subject DN: </b> {{ certificado_dn }} <br>
         <b>Issuer DN:</b> {{ certificado_issuer_dn }} <br>
-        <b>Válido:</b> {{ `Não antes de ${certificado_not_before}` }} <br> {{
-          `Não depois de ${certificado_not_after}`
+        <b>Valid:</b> {{ `Not before ${certificado_not_before}` }} <br> {{
+          `Not after ${certificado_not_after}`
         }}
       </v-col>
     </v-card>
@@ -72,7 +72,7 @@ export default {
             this.certificado_not_before = r.data.validityNotAfter
             this.certificado_not_after = r.data.validityNotBefore
 
-            this.$alert("Certificado carregado com sucesso")
+            this.$alert("Certificate successfully loaded")
           } else if (r.data.error) {
             this.$alert(r.data.error)
           }
