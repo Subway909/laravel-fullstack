@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "420fdcbb-b6a8-4a00-9d78-1078a689b208",
+		"_postman_id": "470ed584-3656-4095-a002-f6baa023056e",
 		"name": "Laravel Fullstack",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8953379"
 	},
 	"item": [
 		{
@@ -55,7 +56,7 @@
 			"response": []
 		},
 		{
-			"name": "Qual user está logado no momento?",
+			"name": "WHOAMI",
 			"event": [
 				{
 					"listen": "test",
@@ -94,7 +95,7 @@
 			"response": []
 		},
 		{
-			"name": "Listar todos os usuários",
+			"name": "List users",
 			"event": [
 				{
 					"listen": "test",
@@ -133,7 +134,7 @@
 			"response": []
 		},
 		{
-			"name": "Listar usuário por id",
+			"name": "Get user by id",
 			"event": [
 				{
 					"listen": "test",
@@ -180,7 +181,7 @@
 			"response": []
 		},
 		{
-			"name": "Criar usuário",
+			"name": "Create user",
 			"event": [
 				{
 					"listen": "test",
@@ -223,7 +224,7 @@
 			"response": []
 		},
 		{
-			"name": "Editar usuário",
+			"name": "Edit User",
 			"event": [
 				{
 					"listen": "test",
@@ -267,7 +268,7 @@
 			"response": []
 		},
 		{
-			"name": "Deletar usuário",
+			"name": "Delete User",
 			"event": [
 				{
 					"listen": "test",
@@ -350,7 +351,7 @@
 			"response": []
 		},
 		{
-			"name": "Consultar CEP",
+			"name": "Get ZIPCODE information (Brazilian zip code)",
 			"event": [
 				{
 					"listen": "test",
@@ -377,13 +378,18 @@
 					}
 				],
 				"url": {
-					"raw": "{{url}}/cep/15085-895",
+					"raw": "{{url}}/cep?cep=15085895",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"cep",
-						"15085-895"
+						"cep"
+					],
+					"query": [
+						{
+							"key": "cep",
+							"value": "15085895"
+						}
 					]
 				}
 			},
@@ -418,16 +424,6 @@
 					""
 				]
 			}
-		}
-	],
-	"variable": [
-		{
-			"key": "url",
-			"value": "http://localhost:8001/"
-		},
-		{
-			"key": "token",
-			"value": ""
 		}
 	]
 }
