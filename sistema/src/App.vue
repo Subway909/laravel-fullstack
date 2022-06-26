@@ -128,10 +128,10 @@ export default {
   },
   methods: {
     logout() {
-      this.$confirm("Deseja efetuar o logout?", "", "",
+      this.$confirm("Do you wish to log out?", "", "",
         {
-          confirmButtonText: 'Sim',
-          cancelButtonText: 'Não'
+          confirmButtonText: 'Yes',
+          cancelButtonText: 'No'
         }).then(() => {
         this.$router.replace("/logout")
       });

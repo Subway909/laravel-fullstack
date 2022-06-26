@@ -1,5 +1,7 @@
 <?php
 
+//this is part 1 of the test, instructions at "Prova Fullsta 1.pdf"
+
 interface InterfaceCargo {
   public function setNome(string $nome);
 

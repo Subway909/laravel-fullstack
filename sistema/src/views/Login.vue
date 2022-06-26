@@ -26,7 +26,7 @@
               </v-card-title>
 
               <v-card-text>
-                <p class="mt-5">This is a little CRUD frontend application built with Vue and Vuetify. After login you can register a user, view the list of users, and submit a .pem certificate to view the certificate info.</p>
+                <p class="mt-5">This is a little CRUD frontend application built with Vue and Vuetify. You can register a user, view the list of users, and submit a .pem certificate to view the certificate info.</p>
 
                 <p class="mt-5">You can login using <b>login@email.com</b> and password <b>123456</b></p>
 

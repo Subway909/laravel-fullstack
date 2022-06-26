@@ -1,43 +1,40 @@
-PHP Fullstack - Laravel backend with Frontend using Vue
+PHP Fullstack - API em Laravel com Vue no frontend
 =====
 
-Client server architecture: Laravel backend API and frontend made with Vue
-
-<sup><sub>This was made at the request of a company that i was in the procces of interviewing at the time (and ended up working there for a while). Their instructions are on a pdf file inside the `_part1` folder (portuguese only), but it was required to build an API and a frontend (CRUD) </sub></sup>
+Arquitetura client server com uma API em Laravel no backend, e frontend em Vue.
 
 Screenshots
 =====
 
-![screenshot1](/_readme_images/en-US/9.png)
-Click the icon at the top to get instructions on how to log in
+![screenshot1](_readme_images/9.png)
 
-![screenshot1](/_readme_images/en-US/10.png)
+![screenshot1](_readme_images/10.png)
 
-![screenshot1](/_readme_images/en-US/11.png)
+![screenshot1](_readme_images/11.png)
 
-![screenshot1](/_readme_images/en-US/12.png)
+![screenshot1](_readme_images/12.png)
 
-![screenshot1](/_readme_images/en-US/13.png)
+![screenshot1](_readme_images/13.png)
 
 Setup
 =====
 
-Install [Docker](https://docs.docker.com/get-started/).
+Instale o [Docker](https://docs.docker.com/get-started/).
 
-Open the terminal, go to the app folder and type:
+Abra o terminal na raiz da aplicação e digite o comando:
 ```sh
 docker-compose up -d
 ```
 
-![docker_compose](/_readme_images/en-US/1.png)
+![docker_compose](_readme_images/1.png)
 
-After Docker finishes building the project, the database is created and the Artisan `migrate` and `db:seed` commands are executed automatically to populate the database. Now the API is ready and can be reached by the URL: `http://localhost:8001/api/`   
+Depois de concluído, o banco MYSQL já está criado e os comandos do artisan de `migrate` e `db:seed` já devem ter sido rodados automaticamente. A API já está pronta e pode ser acessada pela rota `http://localhost:8001/api/`
 
-To check if it's working, you can `GET` the route `/`:
+Para testar se está funcionando pode dar um `GET` na rota `/`:
 
-![ping](/_readme_images/en-US/2.png)
+![ping](_readme_images/2.png)
 
-Routes
+Rotas
 =====
 
 ```
@@ -69,37 +66,39 @@ Routes
 
 ```
 
-- Before consuming the API, it's necessary to login by calling the login route with user `login@email.com` password `123456` (this data is set via `.env` file)
-- That way the login will return the `bearer token`, which will be used to authenticate all the other API methods
-- Also available in the folder `_postman`, the Postman collection and environment. This collection is set to add the token returned by the `login`, so you're authenticated
+- Antes de consumir a API é necessário logar chamando a rota de login com o usuário `login@email.com` senha `123456` (esses dados estão parametrizados no `.env`)
+- O login irá retornar um token que deve ser usado para autenticar as demais rotas.
+- Também está disponível na pasta `_postman` uma collection e um environment do Postman com todas as rotas. Essa collection já está pronta para adicionar automaticamente o token retornado pelo login em todas as requisições.
 
-![postman1](/_readme_images/pt-BR/8.png)
+![postman1](_readme_images/8.png)
 
-![postman2](/_readme_images/en-US/3.png)
+![postman2](_readme_images/3.png)
 
-![postman3](/_readme_images/en-US/7.png)
+![postman3](_readme_images/7.png)
 
 Vue
 =====
 
-Inside the folder `sistema`, run `npm install` command (Node and NPM required). Após a instalação das dependências, rode o comando `npm run serve`. When ready, this command will return the url to access the Vue frontend:
+Dentro da pasta `sistema`, rode o comando `npm install`. Após a instalação das dependências, rode o comando `npm run serve`. O comando vai retornar uma url para acessar o frontend da aplicação:
 
-![vue](/_readme_images/en-US/14.png)
+![vue](_readme_images/14.png)
 
 
-Unit tests
+Teste unitários
 =====
-To run the unit tests, you have to ssh into the docker container:
 
-- To list containers rype `docker ps`
-![docker_ps](/_readme_images/en-US/4.png)
+Para rodar os testes, será necessário entrar no container do Docker para rodar o comando.
 
-- You should see a container named `laravel-fullstack_apache_with_php_1`
-- To ssh into it, type `docker exec -it laravel-fullstack_apache_with_php_1 bash`
-- To run the tests, type `php artisan test`
-![test](/_readme_images/pt-BR/5.png)
+- Para listar os containers use o comando `docker ps`
+![docker_ps](_readme_images/4.png)
 
-Database
+- O nome do container é `laravel-fullstack_apache_with_php_1`
+- Pode ser acessado com o comando `docker exec -it laravel-fullstack_apache_with_php_1 bash`
+
+- Para rodar os testes, rode o comando `php artisan test`
+![test](_readme_images/5.png)
+
+DB
 =====
-![db](/_readme_images/pt-BR/6.png)
-Database configuration. User `admin` password `1234` (this data is set via `.env` file)
+![db](_readme_images/6.png)
+Configuração do DB. User `admin` senha `1234` (parametrizado no .env)
